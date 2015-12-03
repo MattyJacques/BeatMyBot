@@ -3,7 +3,7 @@
 #include "bot.h"
 
 const int MAXTEAMS = 4;
-const int MAXBOTSPERTEAM = 6;
+const int MAXBOTSPERTEAM = 16;
 const int MAXDOMINATIONPOINTS=16;
 
 
@@ -45,10 +45,11 @@ private:
 	Team m_rgTeams[MAXTEAMS];
 	DominationPoint m_rgDominationPoints[MAXDOMINATIONPOINTS];
 	static DynamicObjects* pInst;
-	//int m_iNumPlacedDominationPoints;
+	
 	float m_dNextScorePoint;						// Time until next points get added
 public:
-  int m_iNumPlacedDominationPoints;
+  int m_iNumPlacedDominationPoints; // CHANGE BACK TO PRIVATE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 	static DynamicObjects* GetInstance();			// Thread-safe singleton
 
 	// Deletes pInst

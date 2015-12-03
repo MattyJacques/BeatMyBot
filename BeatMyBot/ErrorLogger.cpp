@@ -29,14 +29,14 @@ void ErrorLogger::Writeln(const wchar_t text[])
 void ErrorLogger::Writeln(HRESULT hr) 
 {
   //Short and sweet, and it works.
-  LPWSTR output;
-  //if(FAILED(hr)) {
+  LPWSTR output = nullptr;
+  if(FAILED(hr)) {
     FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM |
     FORMAT_MESSAGE_ALLOCATE_BUFFER |
     FORMAT_MESSAGE_IGNORE_INSERTS, NULL, hr,
     MAKELANGID(LANG_NEUTRAL,SUBLANG_DEFAULT),
     (LPTSTR) &output, 0, NULL);
-  //} 
+  } 
   //output this using something that supports wchar_t unicode
   Writeln(output);
 }

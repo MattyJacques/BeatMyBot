@@ -195,7 +195,7 @@ int WINAPI WinMain(HINSTANCE hInstance,			// A number that registers the instanc
 
 
 
-			if (!WindowClosed /*&& ApplicationActive*/)		// Check I'm not already dead
+			if (!WindowClosed && ApplicationActive)		// Check I'm not already dead
 				gameError=GameMain();						// Play the real game stuff
 
 		}		// End infinite loop

@@ -9,10 +9,10 @@
 
 void Bot::Update(float frametime)
 {
-  if (m_iOwnTeamNumber == 0)
-    ProcessAIBadly();
-	//else
-		//ProcessAIBadly();
+	if(m_iOwnTeamNumber==0)
+		ProcessAI();
+	else
+		ProcessAIBadly();
 
 	// Check for respawn
 	if(this->m_dTimeToRespawn>0)
@@ -335,9 +335,12 @@ void Bot::StartAI()
 // Eventually, this will contain very little code - it just runs the state
 void Bot::ProcessAI()
 {
-  if (Pathfinder::GetInstance()->nodeList.size() > 0 && m_Position.XValue > 0 && DynamicObjects::GetInstance()->m_iNumPlacedDominationPoints > 0)
+  if (this->IsAlive())
   {
-    Pathfinder::GetInstance()->PathDebug(m_Position, DynamicObjects::GetInstance()->GetDominationPoint(m_iOwnBotNumber % 3).m_Location);
+    if (Pathfinder::GetInstance()->nodeList.size() > 0 && DynamicObjects::GetInstance()->m_iNumPlacedDominationPoints > 0 && m_iOwnBotNumber == 0)
+    {
+      Pathfinder::GetInstance()->PathDebug(m_Position, DynamicObjects::GetInstance()->GetDominationPoint(m_iOwnBotNumber % 3).m_Location);
+    }
   }
 }
 

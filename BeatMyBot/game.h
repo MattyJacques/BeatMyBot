@@ -5,9 +5,6 @@
 class Game
 {
 private:
-	bool isClient;
-
-
 	static Game* pInst;
 	Game();
 	~Game();						
