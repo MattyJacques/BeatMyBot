@@ -169,7 +169,6 @@ ErrorType Game::End()
 	DynamicObjects::Release();
   Pathfinder::Release();
   Networking::Release();
-  Behaviours::Release();
 
 	return SUCCESS;
 }
