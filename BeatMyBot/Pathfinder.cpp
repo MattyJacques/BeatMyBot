@@ -37,8 +37,7 @@ void Pathfinder::PlaceNode(Vector2D nodePos)
   Node aNode;
   aNode.position = nodePos;
 
-  if (nodeList.size())
-    aNode.nodeID = nodeList.size();
+  aNode.nodeID = nodeList.size();
 
   nodeList.push_back(aNode);
 } // PlaceNode()

@@ -5,6 +5,8 @@
 #include "myinputs.h"
 #include "dynamicobjects.h"
 #include "Pathfinder.h"
+#include "Behaviours.h"
+#include "Networking.h"
 
 Game* Game::pInst = NULL;
 
@@ -165,6 +167,10 @@ ErrorType Game::End()
 	Renderer::Release();
 	StaticMap::Release();
 	DynamicObjects::Release();
+  Pathfinder::Release();
+  Networking::Release();
+  Behaviours::Release();
+
 	return SUCCESS;
 }
 
