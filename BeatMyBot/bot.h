@@ -22,7 +22,9 @@ protected:
 	float m_dAccuracy;				// Accuracy of the current firing solution (1==100%)
 	int m_iHealth;					// Health (up to 100)
 
-	Vector2D targetPoint;			// Used only by placeholder AI. Delete this.
+	Vector2D targetPoint;			// Used only by Chris's AI
+
+  std::vector<Vector2D> myPath;
 
 public:
 	Bot();	

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vector2D.h"       // Vector2D functionality
+#include <vector>
 
 class Behaviours
 {
@@ -9,9 +10,13 @@ private:
  
 
 public:
-  bool seekOn;          // Is the bot seeking
-  bool pathfindOn;      // Is the bot pathfinding
-  bool avoidWallsOn;    // Is the bot avoiding walls
+  bool seekSwitch;          // Is the bot seeking
+  bool arriveSwitch;
+  bool pursueSwitch;
+  bool evadeSwitch;
+  bool fleeSwitch;
+  bool avoidWallsSwitch;    // Is the bot avoiding walls
+  bool followPathSwitch;      // Is the bot pathfinding
   
   // Constructor initialises all variables within class to null etc
   Behaviours();
@@ -41,10 +46,15 @@ public:
   // the avoid nearby walls
   Vector2D WallAvoid(Vector2D botPosition, Vector2D botVelocity);
 
+  // Returns the result of Seek() to the next node on the path, has a check
+  // to see if the bot can skip and node and seek straight to the one after
+  Vector2D FollowPath(std::vector<Vector2D> &myPath, Vector2D botPosition, 
+                      Vector2D botVelocity);
+
   // Accumulates all the vector2D velocitys from the other behaviours to
   // provide the real velcoity the bot should currently be following
   Vector2D Accumulate(Vector2D targetPosition, Vector2D targetVelocity,
-                      Vector2D botPosition, Vector2D botVelocity);
+    Vector2D botPosition, Vector2D botVelocity, std::vector<Vector2D> &myPath);
 
 };
 

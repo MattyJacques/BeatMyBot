@@ -337,11 +337,17 @@ void Bot::ProcessAI()
 {
   if (this->IsAlive())
   {
-    if (Pathfinder::GetInstance()->nodeList.size() > 0 && DynamicObjects::GetInstance()->m_iNumPlacedDominationPoints > 0 && m_iOwnBotNumber == 0)
+    if (Pathfinder::GetInstance()->nodeList.size() > 0 && DynamicObjects::GetInstance()->m_iNumPlacedDominationPoints > 0 && m_iOwnTeamNumber == 0 && myPath.empty())
     {
-      Pathfinder::GetInstance()->PathDebug(m_Position, DynamicObjects::GetInstance()->GetDominationPoint(m_iOwnBotNumber % 3).m_Location);
+
+      //Pathfinder::GetInstance()->PathDebug(m_Position, DynamicObjects::GetInstance()->GetDominationPoint(2).m_Location);
+
+      if (myPath.empty())
+        myPath = Pathfinder::GetInstance()->GeneratePath(m_Position, DynamicObjects::GetInstance()->GetDominationPoint(0).m_Location);
     }
   }
+
+  m_Acceleration = this->Accumulate(Vector2D(0, 0), Vector2D(0, 0), m_Position, m_Velocity, myPath);
 }
 
 

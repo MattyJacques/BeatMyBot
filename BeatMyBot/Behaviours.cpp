@@ -5,9 +5,14 @@
 
 Behaviours::Behaviours()
 {
-  seekOn = false;
-  pathfindOn = false;
-  avoidWallsOn = false;
+  seekSwitch = false;
+  arriveSwitch = false;
+  pursueSwitch = false;
+  evadeSwitch = false;
+  fleeSwitch = false;
+  avoidWallsSwitch = true;
+  followPathSwitch = true;
+
 } // Behaviours()
 
 
@@ -73,13 +78,80 @@ Vector2D Behaviours::Flee() // NOT COMPLETED
 
 Vector2D Behaviours::WallAvoid(Vector2D botPosition, Vector2D botVelocity)
 {
-  Circle2D colCircle(botPosition, 70);
-  Vector2D acc = StaticMap::GetInstance()->GetNormalToSurface(colCircle);
+  Circle2D colCircle(botPosition, 110);
+  Vector2D desiredVelocity;
+  desiredVelocity.set(0, 0);
+  
+  if (StaticMap::GetInstance()->IsInsideBlock(colCircle))
+  {
+    desiredVelocity = StaticMap::GetInstance()->GetNormalToSurface(colCircle);
+    desiredVelocity *= 80;
+  }
 
-  if (botVelocity == Vector2D(0, 0))
-    acc * 100;
-  else
-    acc * 60;
+  return desiredVelocity;
 
-  return acc;
 } // WallAvoid()
+
+
+// DONT LIKE THE LOOK, CHANGE LATER
+Vector2D Behaviours::FollowPath(std::vector<Vector2D> &myPath, Vector2D botPosition, 
+                                Vector2D botVelocity)
+{ 
+  Vector2D nextNode;
+
+  if (!myPath.empty())
+  {
+    nextNode = myPath.back();
+
+    if (myPath.size() > 1)
+    { // Check to see if the bot can skip a node in path
+
+      if (StaticMap::GetInstance()->IsLineOfSight(botPosition, myPath[myPath.size() - 2]))
+        nextNode = myPath[myPath.size() - 2];
+
+      Circle2D arriveCircle(botPosition, 20);
+      if (arriveCircle.Intersects(Point2D(nextNode)))
+      {
+        myPath.pop_back();
+        nextNode = myPath.back();
+      }
+    }
+  }
+
+	return Seek(nextNode, botPosition, botVelocity);
+
+} // FollowPath()
+
+Vector2D Behaviours::Accumulate(Vector2D targetPosition, 
+                                Vector2D targetVelocity, Vector2D botPosition, 
+                                Vector2D botVelocity, 
+                                std::vector<Vector2D> &myPath)
+{
+  Vector2D acceleration;
+
+  if (seekSwitch)
+    acceleration += Seek(targetPosition, botPosition, botVelocity);
+
+  if (arriveSwitch)
+    acceleration += Arrive(targetPosition, botPosition, botVelocity);
+
+  if (pursueSwitch)
+    acceleration += Pursue(targetPosition, targetVelocity, botPosition, 
+                           botVelocity);
+
+  if (evadeSwitch)
+    acceleration += Evade();
+
+  if (fleeSwitch)
+    acceleration += Flee();
+
+  if (avoidWallsSwitch)
+    acceleration += WallAvoid(botPosition, botVelocity);
+
+  if (followPathSwitch)
+    acceleration += FollowPath(myPath, botPosition, botVelocity);
+
+
+  return acceleration;
+
+} // Accumulate()
