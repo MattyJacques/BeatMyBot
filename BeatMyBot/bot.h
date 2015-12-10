@@ -1,8 +1,9 @@
 #pragma once
 #include "shapes.h"
 #include "rules.h"
+#include "Behaviours.h"
 
-class Bot
+class Bot : public Behaviours
 {
 protected:
 	Vector2D m_Position;			// Current world coordinates
