@@ -1,6 +1,7 @@
 #pragma once
 
 #include "State.h"
+#include "bot.h"
 
 class Capture : public State
 {
@@ -15,6 +16,8 @@ public:
   void Enter(Bot* pBot);
   void Execute(Bot* pBot);
   void Exit(Bot* pBot);
+  void GetPath(Bot* pBot);
+  static void Release();
   ~Capture();
 
 };

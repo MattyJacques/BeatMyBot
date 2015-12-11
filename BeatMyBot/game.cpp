@@ -8,6 +8,8 @@
 #include "Behaviours.h"
 #include "Networking.h"
 #include "State.h"
+#include "Attack.h"
+#include "Capture.h"
 
 Game* Game::pInst = NULL;
 
@@ -170,7 +172,8 @@ ErrorType Game::End()
 	DynamicObjects::Release();
   Pathfinder::Release();
   Networking::Release();
-  State::Release();
+  Attack::Release();
+  Capture::Release();
 
 	return SUCCESS;
 }

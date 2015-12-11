@@ -3,6 +3,7 @@
 #include "dynamicobjects.h"
 #include "renderer.h"
 #include "Pathfinder.h"
+#include "Capture.h"
 #include <cmath>
 
 			
@@ -11,8 +12,8 @@ void Bot::Update(float frametime)
 {
 	if(m_iOwnTeamNumber==0)
 		ProcessAI();
-	else
-		ProcessAIBadly();
+	//else
+		//ProcessAIBadly();
 
 	// Check for respawn
 	if(this->m_dTimeToRespawn>0)
@@ -271,16 +272,6 @@ void Bot::StopAiming()
 	m_bAiming = false;
 }
 
-int Bot::GetTeamNumber()
-{
-  return m_iOwnTeamNumber;
-}
-
-int Bot::GetBotNumber()
-{
-  return m_iOwnBotNumber;
-}
-
 // Call this to set the bot to shoot, if it can.
 // Once a shot it taken, the bot will not shoot again unless told to do so.
 void Bot::Shoot()
@@ -336,7 +327,7 @@ void Bot::TakeDamage(int amount)
 // and calls methods to analyse the map
 void Bot::StartAI()
 {
-
+  ChangeState(Capture::GetInstance());
 }
 
 // This is your function. Use it to set the orders for the bot.
@@ -345,20 +336,51 @@ void Bot::StartAI()
 // Eventually, this will contain very little code - it just runs the state
 void Bot::ProcessAI()
 {
-  if (this->IsAlive())
+  //if (this->IsAlive())
+  //{
+  //  if (Pathfinder::GetInstance()->nodeList.size() > 0 && DynamicObjects::GetInstance()->m_iNumPlacedDominationPoints > 0 && m_iOwnTeamNumber == 0 && myPath.empty())
+  //  {
+  //    //Pathfinder::GetInstance()->PathDebug(m_Position, DynamicObjects::GetInstance()->GetDominationPoint(2).m_Location);
+  //    if (myPath.empty())
+  //      myPath = Pathfinder::GetInstance()->GeneratePath(m_Position, DynamicObjects::GetInstance()->GetDominationPoint(0).m_Location);
+  //  }
+  //}
+  // m_Acceleration = Accumulate(Vector2D(0, 0), Vector2D(0, 0), m_Position, m_Velocity, myPath);
+
+  pCurrentState->Execute(this);
+
+  /*if (IsAlive())
   {
-    if (Pathfinder::GetInstance()->nodeList.size() > 0 && DynamicObjects::GetInstance()->m_iNumPlacedDominationPoints > 0 && m_iOwnTeamNumber == 0 && myPath.empty())
-    {
+    m_Acceleration = Accumulate(pTarget->GetLocation(), pTarget->GetVelocity(),
+      GetLocation(), GetVelocity(), myPath);
+  }*/
 
-      //Pathfinder::GetInstance()->PathDebug(m_Position, DynamicObjects::GetInstance()->GetDominationPoint(2).m_Location);
-
-      if (myPath.empty())
-        myPath = Pathfinder::GetInstance()->GeneratePath(m_Position, DynamicObjects::GetInstance()->GetDominationPoint(0).m_Location);
-    }
-  }
-
-  m_Acceleration = Accumulate(Vector2D(0, 0), Vector2D(0, 0), m_Position, m_Velocity, myPath);
 }
+
+
+void Bot::ChangeState(State* newState)
+{
+  pCurrentState = newState;
+  pCurrentState->Enter(this);
+} // ChangeState()
+
+
+std::vector<Vector2D> Bot::GetPath()
+{
+  return myPath;
+} // GetPath()
+
+
+void Bot::SetPath(std::vector<Vector2D>* thePath)
+{
+  myPath = *thePath;
+} // SetPath()
+
+
+void Bot::SetAcceleration(Vector2D accel)
+{
+  m_Acceleration = accel;
+} // SetAcceleration()
 
 
 void Bot::ProcessAIBadly()
@@ -560,4 +582,14 @@ void Bot::ProcessAIBadly()
 		}
 
 	}
+}
+
+int Bot::GetTeamNumber()
+{
+  return m_iOwnTeamNumber;
+}
+
+int Bot::GetBotNumber()
+{
+  return m_iOwnBotNumber;
 }

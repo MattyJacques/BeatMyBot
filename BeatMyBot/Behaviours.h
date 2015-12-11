@@ -3,6 +3,9 @@
 #include "vector2D.h"       // Vector2D functionality
 #include <vector>
 
+class Bot;
+struct DominationPoint;
+
 class Behaviours
 {
 private:
@@ -17,6 +20,8 @@ public:
   bool fleeSwitch;
   bool avoidWallsSwitch;    // Is the bot avoiding walls
   bool followPathSwitch;      // Is the bot pathfinding
+  Bot* pTarget;
+  DominationPoint* domTarget;
   
   // Constructor initialises all variables within class to null etc
   Behaviours();
@@ -36,7 +41,7 @@ public:
                   Vector2D botVelocity);
 
   // Returns a vector2D that can be used to pursue a moving target using the
-  // targets position and velocity to works out an intercept
+  // targets position and velocity to work out an intercept
   Vector2D Pursue(Vector2D targetPosition, Vector2D targetVelocity,
                   Vector2D botPosition, Vector2D botVelocity);
 
