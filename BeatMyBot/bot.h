@@ -24,10 +24,11 @@ protected:
 
 	Vector2D targetPoint;			// Used only by Chris's AI
 
-  std::vector<Vector2D> myPath;
+  
 
 public:
 	Bot();	
+  std::vector<Vector2D> myPath;
 
 	// Runs once each frame. Handles physics, shooting, and calls
 	// ProcessAI
@@ -105,4 +106,8 @@ public:
 
 	// Stops the bot from aiming, so it can move again
 	void StopAiming();
+
+  int GetTeamNumber();
+
+  int GetBotNumber();
 };

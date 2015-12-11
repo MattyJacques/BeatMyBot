@@ -84,14 +84,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Attack.cpp" />
     <ClCompile Include="Behaviours.cpp" />
     <ClCompile Include="bot.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="Capture.cpp" />
+    <ClCompile Include="Defend.cpp" />
     <ClCompile Include="dynamicobjects.cpp" />
     <ClCompile Include="ErrorLogger.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="gamecode.cpp" />
     <ClCompile Include="gametimer.cpp" />
+    <ClCompile Include="Hunt.cpp" />
     <ClCompile Include="mydrawengine.cpp" />
     <ClCompile Include="myinputs.cpp" />
     <ClCompile Include="mysound.cpp" />
@@ -100,20 +104,25 @@
     <ClCompile Include="Pathfinder.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="Shapes.cpp" />
+    <ClCompile Include="State.cpp" />
     <ClCompile Include="staticmap.cpp" />
     <ClCompile Include="vector2D.cpp" />
     <ClCompile Include="wincode.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Attack.h" />
     <ClInclude Include="Behaviours.h" />
     <ClInclude Include="bot.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="Capture.h" />
+    <ClInclude Include="Defend.h" />
     <ClInclude Include="dynamicObjects.h" />
     <ClInclude Include="ErrorLogger.h" />
     <ClInclude Include="errortype.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="gamecode.h" />
     <ClInclude Include="gametimer.h" />
+    <ClInclude Include="Hunt.h" />
     <ClInclude Include="mydrawengine.h" />
     <ClInclude Include="myinputs.h" />
     <ClInclude Include="mysound.h" />
@@ -124,6 +133,7 @@
     <ClInclude Include="rules.h" />
     <ClInclude Include="Shapes.h" />
     <ClInclude Include="SoundPlayer.h" />
+    <ClInclude Include="State.h" />
     <ClInclude Include="staticmap.h" />
     <ClInclude Include="vector2D.h" />
   </ItemGroup>

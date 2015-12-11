@@ -15,6 +15,21 @@ Behaviours::Behaviours()
 
 } // Behaviours()
 
+void Behaviours::SetBehaviours(bool doSeek, bool doArrive, bool doPursue, 
+                               bool doEvade, bool doFlee, bool doWalls, 
+                               bool doPath)
+{
+
+  seekSwitch = doSeek;
+  arriveSwitch = doArrive;
+  pursueSwitch = doPursue;
+  evadeSwitch = doEvade;
+  fleeSwitch = doFlee;
+  avoidWallsSwitch = doWalls;
+  followPathSwitch = doPath;
+
+} // SetBehaviours()
+
 
 Vector2D Behaviours::Seek(Vector2D targetPosition, Vector2D botPosition,
                           Vector2D botVelocity)

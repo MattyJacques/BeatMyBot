@@ -7,6 +7,7 @@
 #include "Pathfinder.h"
 #include "Behaviours.h"
 #include "Networking.h"
+#include "State.h"
 
 Game* Game::pInst = NULL;
 
@@ -169,6 +170,7 @@ ErrorType Game::End()
 	DynamicObjects::Release();
   Pathfinder::Release();
   Networking::Release();
+  State::Release();
 
 	return SUCCESS;
 }

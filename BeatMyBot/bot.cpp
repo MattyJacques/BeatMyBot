@@ -271,6 +271,16 @@ void Bot::StopAiming()
 	m_bAiming = false;
 }
 
+int Bot::GetTeamNumber()
+{
+  return m_iOwnTeamNumber;
+}
+
+int Bot::GetBotNumber()
+{
+  return m_iOwnBotNumber;
+}
+
 // Call this to set the bot to shoot, if it can.
 // Once a shot it taken, the bot will not shoot again unless told to do so.
 void Bot::Shoot()
@@ -347,7 +357,7 @@ void Bot::ProcessAI()
     }
   }
 
-  m_Acceleration = this->Accumulate(Vector2D(0, 0), Vector2D(0, 0), m_Position, m_Velocity, myPath);
+  m_Acceleration = Accumulate(Vector2D(0, 0), Vector2D(0, 0), m_Position, m_Velocity, myPath);
 }
 
 

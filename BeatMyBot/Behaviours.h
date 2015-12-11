@@ -21,6 +21,11 @@ public:
   // Constructor initialises all variables within class to null etc
   Behaviours();
 
+  // Sets all the various behaviours to true or false using the parameters
+  // provided
+  void SetBehaviours(bool doSeek, bool doArrive, bool doPursue, bool doEvade,
+                     bool doFlee, bool doWalls, bool doPath);
+
   // Takes in target position and returns desired velocity to reach the target
   Vector2D Seek(Vector2D targetPosition, Vector2D botPosition,
                 Vector2D botVelocity);
