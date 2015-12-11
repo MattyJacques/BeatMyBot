@@ -72,19 +72,19 @@
     <ClCompile Include="bot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="State.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Attack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Capture.cpp">
+    <ClCompile Include="State.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Hunt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Defend.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Hunt.cpp">
+    <ClCompile Include="Capture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

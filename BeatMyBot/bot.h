@@ -2,6 +2,7 @@
 #include "shapes.h"
 #include "rules.h"
 #include "Behaviours.h"
+#include "State.h"
 
 class Bot : public Behaviours
 {
@@ -22,13 +23,16 @@ protected:
 	float m_dAccuracy;				// Accuracy of the current firing solution (1==100%)
 	int m_iHealth;					// Health (up to 100)
 
+  State* pCurrentState;
+  std::vector<Vector2D> myPath;
+
 	Vector2D targetPoint;			// Used only by Chris's AI
 
   
 
 public:
 	Bot();	
-  std::vector<Vector2D> myPath;
+
 
 	// Runs once each frame. Handles physics, shooting, and calls
 	// ProcessAI
@@ -60,6 +64,13 @@ public:
 	// This is your function. Use it to set the orders for the bot.
 	// Will be called once each frame from Update
 	void ProcessAI();	
+
+  // Uses the pointer given as a parameter to the current active state for
+  // the bot
+  void ChangeState(State* newState);
+
+  // Returns the current path stored in the bot MAYBE HAVE TO CHANGE TO POINTER
+  std::vector<Vector2D> GetPath();
 
 	// This is a quick n' dirty AI for team 2.
 	// Try to make team 1 better than this.
@@ -110,4 +121,6 @@ public:
   int GetTeamNumber();
 
   int GetBotNumber();
+
+
 };

@@ -271,16 +271,6 @@ void Bot::StopAiming()
 	m_bAiming = false;
 }
 
-int Bot::GetTeamNumber()
-{
-  return m_iOwnTeamNumber;
-}
-
-int Bot::GetBotNumber()
-{
-  return m_iOwnBotNumber;
-}
-
 // Call this to set the bot to shoot, if it can.
 // Once a shot it taken, the bot will not shoot again unless told to do so.
 void Bot::Shoot()
@@ -336,7 +326,7 @@ void Bot::TakeDamage(int amount)
 // and calls methods to analyse the map
 void Bot::StartAI()
 {
-
+  pCurrentState = Attack::GetInstance();
 }
 
 // This is your function. Use it to set the orders for the bot.
@@ -345,19 +335,30 @@ void Bot::StartAI()
 // Eventually, this will contain very little code - it just runs the state
 void Bot::ProcessAI()
 {
-  if (this->IsAlive())
-  {
-    if (Pathfinder::GetInstance()->nodeList.size() > 0 && DynamicObjects::GetInstance()->m_iNumPlacedDominationPoints > 0 && m_iOwnTeamNumber == 0 && myPath.empty())
-    {
+  //if (this->IsAlive())
+  //{
+  //  if (Pathfinder::GetInstance()->nodeList.size() > 0 && DynamicObjects::GetInstance()->m_iNumPlacedDominationPoints > 0 && m_iOwnTeamNumber == 0 && myPath.empty())
+  //  {
+  //    //Pathfinder::GetInstance()->PathDebug(m_Position, DynamicObjects::GetInstance()->GetDominationPoint(2).m_Location);
+  //    if (myPath.empty())
+  //      myPath = Pathfinder::GetInstance()->GeneratePath(m_Position, DynamicObjects::GetInstance()->GetDominationPoint(0).m_Location);
+  //  }
+  //}
+  // m_Acceleration = Accumulate(Vector2D(0, 0), Vector2D(0, 0), m_Position, m_Velocity, myPath);
 
-      //Pathfinder::GetInstance()->PathDebug(m_Position, DynamicObjects::GetInstance()->GetDominationPoint(2).m_Location);
 
-      if (myPath.empty())
-        myPath = Pathfinder::GetInstance()->GeneratePath(m_Position, DynamicObjects::GetInstance()->GetDominationPoint(0).m_Location);
-    }
-  }
+}
 
-  m_Acceleration = Accumulate(Vector2D(0, 0), Vector2D(0, 0), m_Position, m_Velocity, myPath);
+
+void Bot::ChangeState(State* newState)
+{
+  pCurrentState = newState;
+}
+
+
+std::vector<Vector2D> Bot::GetPath()
+{
+  return myPath;
 }
 
 
@@ -560,4 +561,14 @@ void Bot::ProcessAIBadly()
 		}
 
 	}
+}
+
+int Bot::GetTeamNumber()
+{
+  return m_iOwnTeamNumber;
+}
+
+int Bot::GetBotNumber()
+{
+  return m_iOwnBotNumber;
 }
