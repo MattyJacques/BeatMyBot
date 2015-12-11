@@ -4,6 +4,7 @@
 #include <vector>
 
 class Bot;
+struct DominationPoint;
 
 class Behaviours
 {
@@ -20,6 +21,7 @@ public:
   bool avoidWallsSwitch;    // Is the bot avoiding walls
   bool followPathSwitch;      // Is the bot pathfinding
   Bot* pTarget;
+  DominationPoint* domTarget;
   
   // Constructor initialises all variables within class to null etc
   Behaviours();

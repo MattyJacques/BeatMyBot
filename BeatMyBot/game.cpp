@@ -9,6 +9,7 @@
 #include "Networking.h"
 #include "State.h"
 #include "Attack.h"
+#include "Capture.h"
 
 Game* Game::pInst = NULL;
 
@@ -172,6 +173,7 @@ ErrorType Game::End()
   Pathfinder::Release();
   Networking::Release();
   Attack::Release();
+  Capture::Release();
 
 	return SUCCESS;
 }

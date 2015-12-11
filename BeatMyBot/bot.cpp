@@ -3,7 +3,7 @@
 #include "dynamicobjects.h"
 #include "renderer.h"
 #include "Pathfinder.h"
-#include "Attack.h"
+#include "Capture.h"
 #include <cmath>
 
 			
@@ -12,8 +12,8 @@ void Bot::Update(float frametime)
 {
 	if(m_iOwnTeamNumber==0)
 		ProcessAI();
-	else
-		ProcessAIBadly();
+	//else
+		//ProcessAIBadly();
 
 	// Check for respawn
 	if(this->m_dTimeToRespawn>0)
@@ -327,7 +327,7 @@ void Bot::TakeDamage(int amount)
 // and calls methods to analyse the map
 void Bot::StartAI()
 {
-  ChangeState(Attack::GetInstance());
+  ChangeState(Capture::GetInstance());
 }
 
 // This is your function. Use it to set the orders for the bot.
@@ -349,8 +349,11 @@ void Bot::ProcessAI()
 
   pCurrentState->Execute(this);
 
-  m_Acceleration = Accumulate(pTarget->GetLocation(), pTarget->GetVelocity(),
-                              GetLocation(), GetVelocity(), myPath);
+  /*if (IsAlive())
+  {
+    m_Acceleration = Accumulate(pTarget->GetLocation(), pTarget->GetVelocity(),
+      GetLocation(), GetVelocity(), myPath);
+  }*/
 
 }
 
@@ -359,13 +362,25 @@ void Bot::ChangeState(State* newState)
 {
   pCurrentState = newState;
   pCurrentState->Enter(this);
-}
+} // ChangeState()
 
 
 std::vector<Vector2D> Bot::GetPath()
 {
   return myPath;
-}
+} // GetPath()
+
+
+void Bot::SetPath(std::vector<Vector2D>* thePath)
+{
+  myPath = *thePath;
+} // SetPath()
+
+
+void Bot::SetAcceleration(Vector2D accel)
+{
+  m_Acceleration = accel;
+} // SetAcceleration()
 
 
 void Bot::ProcessAIBadly()

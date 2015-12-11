@@ -72,6 +72,10 @@ public:
   // Returns the current path stored in the bot MAYBE HAVE TO CHANGE TO POINTER
   std::vector<Vector2D> GetPath();
 
+  void SetPath(std::vector<Vector2D>* thePath);
+
+  void SetAcceleration(Vector2D accel);
+
 	// This is a quick n' dirty AI for team 2.
 	// Try to make team 1 better than this.
 	// Will be called once each frame from Update
