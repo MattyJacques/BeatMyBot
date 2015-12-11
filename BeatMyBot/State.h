@@ -6,16 +6,16 @@ class State
 {
 
 protected:
-  static State* pInstance;
+  //static State* pInstance;
 
-  State();
+  //State();
 
 public:
-  static State* GetInstance();
-  void Enter(Bot* pBot);
-  void Execute(Bot* pBot);
-  void Exit(Bot* pBot);
-  static void Release();
-  ~State();
+  //virutal static State* GetInstance() = 0;
+  virtual void Enter(Bot* pBot) = 0;
+  virtual void Execute(Bot* pBot) = 0;
+  virtual void Exit(Bot* pBot) = 0;
+  //static void Release();
+  //~State();
 };
 

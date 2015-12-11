@@ -3,6 +3,8 @@
 #include "vector2D.h"       // Vector2D functionality
 #include <vector>
 
+class Bot;
+
 class Behaviours
 {
 private:
@@ -17,6 +19,7 @@ public:
   bool fleeSwitch;
   bool avoidWallsSwitch;    // Is the bot avoiding walls
   bool followPathSwitch;      // Is the bot pathfinding
+  Bot* pTarget;
   
   // Constructor initialises all variables within class to null etc
   Behaviours();

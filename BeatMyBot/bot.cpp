@@ -3,6 +3,7 @@
 #include "dynamicobjects.h"
 #include "renderer.h"
 #include "Pathfinder.h"
+#include "Attack.h"
 #include <cmath>
 
 			
@@ -326,7 +327,7 @@ void Bot::TakeDamage(int amount)
 // and calls methods to analyse the map
 void Bot::StartAI()
 {
-  pCurrentState = Attack::GetInstance();
+  ChangeState(Attack::GetInstance());
 }
 
 // This is your function. Use it to set the orders for the bot.
@@ -346,6 +347,10 @@ void Bot::ProcessAI()
   //}
   // m_Acceleration = Accumulate(Vector2D(0, 0), Vector2D(0, 0), m_Position, m_Velocity, myPath);
 
+  pCurrentState->Execute(this);
+
+  m_Acceleration = Accumulate(pTarget->GetLocation(), pTarget->GetVelocity(),
+                              GetLocation(), GetVelocity(), myPath);
 
 }
 
@@ -353,6 +358,7 @@ void Bot::ProcessAI()
 void Bot::ChangeState(State* newState)
 {
   pCurrentState = newState;
+  pCurrentState->Enter(this);
 }
 
 

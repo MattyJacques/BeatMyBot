@@ -1,21 +1,21 @@
 #include "State.h"
 
-State* State::pInstance = nullptr;
+//State* State::pInstance = nullptr;
 
-State::State()
-{
+//State::State()
+//{
+//
+//} // State()
 
-} // State()
-
-State* State::GetInstance()
-{
-  if (!pInstance)
-  {
-    pInstance = new State;
-  }
-
-  return pInstance;
-}
+//State* State::GetInstance()
+//{
+//  if (!pInstance)
+//  {
+//    pInstance = new State;
+//  }
+//
+//  return pInstance;
+//}
 
 void State::Enter(Bot* pBot)
 {
@@ -32,16 +32,16 @@ void State::Exit(Bot* pBot)
 
 } // Exit()
 
-void State::Release()
-{
-  if (pInstance)
-  {
-    delete pInstance;
-    pInstance = nullptr;
-  }
-} // Release()
+//void State::Release()
+//{
+//  if (pInstance)
+//  {
+//    delete pInstance;
+//    pInstance = nullptr;
+//  }
+//} // Release()
 
-State::~State()
-{
-
-} // ~State
+//State::~State()
+//{
+//
+//} // ~State

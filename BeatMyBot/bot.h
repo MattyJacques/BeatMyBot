@@ -24,6 +24,7 @@ protected:
 	int m_iHealth;					// Health (up to 100)
 
   State* pCurrentState;
+  
   std::vector<Vector2D> myPath;
 
 	Vector2D targetPoint;			// Used only by Chris's AI
@@ -32,7 +33,6 @@ protected:
 
 public:
 	Bot();	
-
 
 	// Runs once each frame. Handles physics, shooting, and calls
 	// ProcessAI
@@ -118,8 +118,10 @@ public:
 	// Stops the bot from aiming, so it can move again
 	void StopAiming();
 
+  // Returns the bots team number
   int GetTeamNumber();
 
+  // Returns the bots number within the team
   int GetBotNumber();
 
 

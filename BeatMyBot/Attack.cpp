@@ -1,5 +1,6 @@
 #include "Attack.h"
 #include "staticmap.h"
+#include "dynamicObjects.h"
 
 
 Attack* Attack::pInstance = nullptr;
@@ -21,9 +22,9 @@ Attack* Attack::GetInstance()
 } // GetInstance()
 
 
-void Attack::Enter(Bot* pBot, Bot* targetBot)
+void Attack::Enter(Bot* pBot)
 {
-  target = targetBot;
+  GetTarget(pBot);
 
   // Turn on Pursue and avoid walls
   pBot->SetBehaviours(0, 0, 1, 0, 0, 1, 0);
@@ -32,25 +33,56 @@ void Attack::Enter(Bot* pBot, Bot* targetBot)
 
 void Attack::Execute(Bot* pBot)
 {
-  if (StaticMap::GetInstance()->IsLineOfSight(pBot->GetLocation(), target->GetLocation()))
+  if (StaticMap::GetInstance()->IsLineOfSight(pBot->GetLocation(), 
+    pBot->pTarget->GetLocation()))
   {
     // Turn on arrive and avoid walls
     pBot->SetBehaviours(0, 1, 0, 0, 0, 1, 0);
-    if ((pBot->GetLocation() - target->GetLocation()).magnitude() <= 150)
+    if ((pBot->GetLocation() - pBot->pTarget->GetLocation()).magnitude() <= 300)
     {
-      pBot->SetTarget(target->GetTeamNumber(), target->GetBotNumber());
-      if (pBot->GetAccuracy() >= 0.1)
+      pBot->SetTarget(pBot->pTarget->GetTeamNumber(), 
+        pBot->pTarget->GetBotNumber());
+
+      if (pBot->GetAccuracy() >= 0.8)
         pBot->Shoot();
     }
   }
 
-  pBot->Accumulate(target->GetLocation(), target->GetVelocity(), 
-                    pBot->GetLocation(), pBot->GetVelocity(), pBot->GetPath());
-
 } // Execute()
+
+
+void Attack::GetTarget(Bot* pBot)
+{
+  int targetTeam;
+
+  if (pBot->GetTeamNumber() == 0)
+    targetTeam = 1;
+  else
+    targetTeam = 0;
+
+
+  pBot->pTarget = &DynamicObjects::GetInstance()->GetBot(targetTeam, 
+                                                         pBot->GetBotNumber());
+} // GetTarget()
 
 
 void Attack::Exit(Bot* pBot)
 {
 
 } // Exit()
+
+
+void Attack::Release()
+{
+  if (pInstance)
+  {
+    delete pInstance;
+    pInstance = nullptr;
+  }
+} // Release()
+
+
+Attack::~Attack()
+{
+
+} // ~Attack()

@@ -3,20 +3,22 @@
 #include "State.h"
 #include "bot.h"
 
+
 class Attack : public State
 {
 
 private:
   static Attack* pInstance;
-  Bot* target;
 
   Attack();
 
 public:
   static Attack* GetInstance();
-  void Enter(Bot* pBot, Bot* target);
+  void Enter(Bot* pBot);
   void Execute(Bot* pBot);
+  void GetTarget(Bot* pBot);
   void Exit(Bot* pBot);
+  static void Release();
   ~Attack();
 
 };
