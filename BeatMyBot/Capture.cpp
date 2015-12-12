@@ -25,7 +25,6 @@ Capture* Capture::GetInstance()
 void Capture::Enter(Bot* pBot)
 {
   pBot->pTarget = nullptr;
-  pBot->domTarget = &DynamicObjects::GetInstance()->GetDominationPoint(0);
   pBot->SetBehaviours(0, 0, 0, 0, 0, 1, 1);
 
 } // Enter()
@@ -33,20 +32,26 @@ void Capture::Enter(Bot* pBot)
 
 void Capture::Execute(Bot* pBot)
 {
-  if (pBot->IsAlive() && pBot->GetPath().empty() && DynamicObjects::GetInstance()->m_iNumPlacedDominationPoints > 0)
+
+  if (pBot->IsAlive() && pBot->GetPath()->size() == 0 && DynamicObjects::GetInstance()->m_iNumPlacedDominationPoints > 0)
   {
+    pBot->domTarget = &DynamicObjects::GetInstance()->GetDominationPoint(0);
     GetPath(pBot);
   }
 
-  if (StaticMap::GetInstance()->IsLineOfSight(pBot->GetLocation(),
-                                               pBot->domTarget->m_Location))
+  if (pBot->IsAlive() && DynamicObjects::GetInstance()->m_iNumPlacedDominationPoints > 0)
   {
-    // Turn on seek and wall avoid
-    pBot->SetBehaviours(1,0,0,0,0,1,0);
-  }
+    if (StaticMap::GetInstance()->IsLineOfSight(pBot->GetLocation(),
+      DynamicObjects::GetInstance()->GetDominationPoint(0).m_Location))
+    {
+      // Turn on seek and wall avoid
+      pBot->SetBehaviours(1, 0, 0, 0, 0, 1, 0);
+    }
 
-  pBot->SetAcceleration(pBot->Accumulate(pBot->domTarget->m_Location, Vector2D(0, 0),
-    pBot->GetLocation(), pBot->GetVelocity(), pBot->GetPath()));
+
+    pBot->SetAcceleration(pBot->Accumulate(DynamicObjects::GetInstance()->GetDominationPoint(0).m_Location, Vector2D(0, 0),
+      pBot->GetLocation(), pBot->GetVelocity(), pBot->GetPath()));
+  }
 } // Execute()
 
 void Capture::Exit(Bot* pBot)
@@ -60,6 +65,7 @@ void Capture::GetPath(Bot* pBot)
 
   pBot->SetPath(&Pathfinder::GetInstance()->GeneratePath(pBot->GetLocation(),
     pBot->domTarget->m_Location));
+  
 
 } // GetPath()
 

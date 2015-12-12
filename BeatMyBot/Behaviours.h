@@ -58,13 +58,13 @@ public:
 
   // Returns the result of Seek() to the next node on the path, has a check
   // to see if the bot can skip and node and seek straight to the one after
-  Vector2D FollowPath(std::vector<Vector2D> &myPath, Vector2D botPosition, 
+  Vector2D FollowPath(std::vector<Vector2D>* myPath, Vector2D botPosition, 
                       Vector2D botVelocity);
 
   // Accumulates all the vector2D velocitys from the other behaviours to
   // provide the real velcoity the bot should currently be following
   Vector2D Accumulate(Vector2D targetPosition, Vector2D targetVelocity,
-    Vector2D botPosition, Vector2D botVelocity, std::vector<Vector2D> &myPath);
+    Vector2D botPosition, Vector2D botVelocity, std::vector<Vector2D>* myPath);
 
 };
 

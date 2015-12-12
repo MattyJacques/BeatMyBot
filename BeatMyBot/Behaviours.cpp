@@ -93,7 +93,7 @@ Vector2D Behaviours::Flee() // NOT COMPLETED
 
 Vector2D Behaviours::WallAvoid(Vector2D botPosition, Vector2D botVelocity)
 {
-  Circle2D colCircle(botPosition, 110);
+  Circle2D colCircle(botPosition, 130);
   Vector2D desiredVelocity;
   desiredVelocity.set(0, 0);
   
@@ -109,26 +109,29 @@ Vector2D Behaviours::WallAvoid(Vector2D botPosition, Vector2D botVelocity)
 
 
 // DONT LIKE THE LOOK, CHANGE LATER
-Vector2D Behaviours::FollowPath(std::vector<Vector2D> &myPath, Vector2D botPosition, 
+Vector2D Behaviours::FollowPath(std::vector<Vector2D>* myPath, Vector2D botPosition, 
                                 Vector2D botVelocity)
 { 
   Vector2D nextNode;
 
-  if (!myPath.empty())
+  if (!myPath->size() == 0)
   {
-    nextNode = myPath.back();
+    nextNode = myPath->back();
 
-    if (myPath.size() > 1)
+    if (myPath->size() > 1)
     { // Check to see if the bot can skip a node in path
 
-      if (StaticMap::GetInstance()->IsLineOfSight(botPosition, myPath[myPath.size() - 2]))
-        nextNode = myPath[myPath.size() - 2];
+      if (StaticMap::GetInstance()->IsLineOfSight(botPosition, (*myPath)[myPath->size() - 2]))
+      {
+        nextNode = (*myPath)[myPath->size() - 2];
+        myPath->pop_back();
+      }
 
-      Circle2D arriveCircle(botPosition, 20);
+      Circle2D arriveCircle(botPosition, 35);
       if (arriveCircle.Intersects(Point2D(nextNode)))
       {
-        myPath.pop_back();
-        nextNode = myPath.back();
+        myPath->pop_back();
+        nextNode = myPath->back();
       }
     }
   }
@@ -140,7 +143,7 @@ Vector2D Behaviours::FollowPath(std::vector<Vector2D> &myPath, Vector2D botPosit
 Vector2D Behaviours::Accumulate(Vector2D targetPosition, 
                                 Vector2D targetVelocity, Vector2D botPosition, 
                                 Vector2D botVelocity, 
-                                std::vector<Vector2D> &myPath)
+                                std::vector<Vector2D>* myPath)
 {
   Vector2D acceleration;
 

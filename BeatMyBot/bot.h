@@ -70,7 +70,7 @@ public:
   void ChangeState(State* newState);
 
   // Returns the current path stored in the bot MAYBE HAVE TO CHANGE TO POINTER
-  std::vector<Vector2D> GetPath();
+  std::vector<Vector2D>* GetPath();
 
   void SetPath(std::vector<Vector2D>* thePath);
 

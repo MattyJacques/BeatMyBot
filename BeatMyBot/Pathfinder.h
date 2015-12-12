@@ -45,7 +45,7 @@ public:
   std::vector<Vector2D> GetPath(Node* endNode);
   void GenerateEdges();
   static void Release();
-  void PathDebug(Vector2D start, Vector2D finish);
+  void PathDebug(std::vector<Vector2D> drawPath);
 
 };
 

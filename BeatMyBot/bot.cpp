@@ -336,18 +336,9 @@ void Bot::StartAI()
 // Eventually, this will contain very little code - it just runs the state
 void Bot::ProcessAI()
 {
-  //if (this->IsAlive())
-  //{
-  //  if (Pathfinder::GetInstance()->nodeList.size() > 0 && DynamicObjects::GetInstance()->m_iNumPlacedDominationPoints > 0 && m_iOwnTeamNumber == 0 && myPath.empty())
-  //  {
-  //    //Pathfinder::GetInstance()->PathDebug(m_Position, DynamicObjects::GetInstance()->GetDominationPoint(2).m_Location);
-  //    if (myPath.empty())
-  //      myPath = Pathfinder::GetInstance()->GeneratePath(m_Position, DynamicObjects::GetInstance()->GetDominationPoint(0).m_Location);
-  //  }
-  //}
-  // m_Acceleration = Accumulate(Vector2D(0, 0), Vector2D(0, 0), m_Position, m_Velocity, myPath);
-
+  
   pCurrentState->Execute(this);
+  //Pathfinder::GetInstance()->PathDebug(myPath);
 
   /*if (IsAlive())
   {
@@ -365,9 +356,9 @@ void Bot::ChangeState(State* newState)
 } // ChangeState()
 
 
-std::vector<Vector2D> Bot::GetPath()
+std::vector<Vector2D>* Bot::GetPath()
 {
-  return myPath;
+  return &myPath;
 } // GetPath()
 
 

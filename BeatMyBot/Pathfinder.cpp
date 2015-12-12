@@ -45,7 +45,7 @@ void Pathfinder::PlaceNode(Vector2D nodePos)
 
 void Pathfinder::GetRect(Rectangle2D rect)
 {
-  if (rect.GetArea() > 1500)
+  if (rect.GetArea() > 1700)
   {
     float height = rect.GetBottomRight().YValue - rect.GetTopRight().YValue;
     float width = rect.GetTopRight().XValue - rect.GetTopLeft().XValue;
@@ -224,23 +224,18 @@ void Pathfinder::Release()
 } // Release()
 
 
-void Pathfinder::PathDebug(Vector2D start, Vector2D finish)
+void Pathfinder::PathDebug(std::vector<Vector2D> drawPath)
 {
-  static std::vector<Vector2D> testPath;
-  static bool pathExists = false;
   int i = 0;
 
-  if (!pathExists)
+  if (drawPath.size() > 0)
   {
-    testPath = GeneratePath(start, finish);
-    pathExists = true;
-  }
-  
-  while (i < testPath.size() - 1 && pathExists)
-  { 
-    
-    Renderer::GetInstance()->DrawLine(testPath[i], testPath[i + 1]);
-    i++;
+    while (i < drawPath.size() - 1)
+    {
+
+      Renderer::GetInstance()->DrawLine(drawPath[i], drawPath[i + 1]);
+      i++;
+    }
   }
 
   for (Node i : nodeList)
