@@ -70,6 +70,14 @@ void Capture::GetPath(Bot* pBot)
 } // GetPath()
 
 
+void Capture::SetTarget(Bot* pBot, DominationPoint* target)
+{
+
+  pBot->domTarget = target;
+
+} // SetTarget()
+
+
 void Capture::Release()
 {
   if (pInstance)

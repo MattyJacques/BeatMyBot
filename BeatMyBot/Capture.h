@@ -17,6 +17,7 @@ public:
   void Execute(Bot* pBot);
   void Exit(Bot* pBot);
   void GetPath(Bot* pBot);
+  void SetTarget(Bot* pBot, DominationPoint* target);
   static void Release();
   ~Capture();
 
