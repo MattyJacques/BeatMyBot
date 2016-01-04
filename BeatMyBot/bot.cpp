@@ -5,7 +5,7 @@
 #include "Pathfinder.h"
 #include "Capture.h"
 #include <cmath>
-
+//
 			
 
 void Bot::Update(float frametime)
@@ -350,27 +350,36 @@ void Bot::ProcessAI()
 
 
 void Bot::ChangeState(State* newState)
-{
+{ // Uses the pointer given as a parameter to the current active state for
+  // the bot
+
   pCurrentState = newState;
   pCurrentState->Enter(this);
+
 } // ChangeState()
 
 
 std::vector<Vector2D>* Bot::GetPath()
-{
+{ // Returns the current path stored in the bot
+
   return &myPath;
+
 } // GetPath()
 
 
 void Bot::SetPath(std::vector<Vector2D>* thePath)
-{
+{ // Sets the bots path to the given parameter
+
   myPath = *thePath;
+
 } // SetPath()
 
 
 void Bot::SetAcceleration(Vector2D accel)
-{
+{ // Sets the bots acceleration to th given parameter
+
   m_Acceleration = accel;
+
 } // SetAcceleration()
 
 

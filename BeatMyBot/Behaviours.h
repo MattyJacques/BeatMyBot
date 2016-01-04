@@ -1,27 +1,30 @@
+// Title        : Behaviours.h
+// Purpose      : Calculates desired velocity for the bot
+
+
 #pragma once
 
 #include "vector2D.h"       // Vector2D functionality
-#include <vector>
+#include <vector>           // Vector to hold path
 
-class Bot;
-struct DominationPoint;
+class Bot;                  // Promise there is a bot class
+struct DominationPoint;     // Gives knowledge of a DP struct
 
 class Behaviours
 {
 private:
-
+  bool seekSwitch;          // Is the bot seeking
+  bool arriveSwitch;        // Is bot arriving
+  bool pursueSwitch;        // Is bot in pursuit
+  bool evadeSwitch;         // Is bot avoiding something
+  bool fleeSwitch;          // Is bot legging it
+  bool avoidWallsSwitch;    // Is the bot avoiding walls
+  bool followPathSwitch;    // Is the bot pathfinding
  
 
 public:
-  bool seekSwitch;          // Is the bot seeking
-  bool arriveSwitch;
-  bool pursueSwitch;
-  bool evadeSwitch;
-  bool fleeSwitch;
-  bool avoidWallsSwitch;    // Is the bot avoiding walls
-  bool followPathSwitch;      // Is the bot pathfinding
-  Bot* pTarget;
-  DominationPoint* domTarget;
+  Bot* pTarget;                 // Holds pointer to a target bot
+  DominationPoint* domTarget;   // Holds pointer to a target DP
   
   // Constructor initialises all variables within class to null etc
   Behaviours();
