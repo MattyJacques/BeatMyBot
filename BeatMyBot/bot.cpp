@@ -585,11 +585,15 @@ void Bot::ProcessAIBadly()
 }
 
 int Bot::GetTeamNumber()
-{
+{ // Returns the bots team number
+
   return m_iOwnTeamNumber;
-}
+
+} // GetTeamNumber()
 
 int Bot::GetBotNumber()
-{
+{ // Returns the bots number within the team
+
   return m_iOwnBotNumber;
-}
+
+} // GetBotNumber()

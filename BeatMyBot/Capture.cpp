@@ -12,6 +12,12 @@
 Capture* Capture::pInstance = nullptr;
 
 
+Capture::Capture()
+{
+
+} // Capture()
+
+
 Capture* Capture::GetInstance()
 { // Returns the instance of the class, if none currently exists create one
 

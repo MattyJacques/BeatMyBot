@@ -11,6 +11,12 @@
 Attack* Attack::pInstance = nullptr;
 
 
+Attack::Attack()
+{
+
+} // Attack()
+
+
 Attack* Attack::GetInstance()
 { // Returns the instance of the class, if none currently exists create one
 

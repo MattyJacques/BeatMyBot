@@ -11,7 +11,6 @@
 
 class Attack : public State
 {
-
 private:
   static Attack* pInstance;  // Holds the instance of the class
 
