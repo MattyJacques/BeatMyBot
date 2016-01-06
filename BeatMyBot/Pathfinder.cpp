@@ -54,7 +54,7 @@ void Pathfinder::GetRect(Rectangle2D rect)
 { // Recursive function that checks the area of a rect for any collisions. If
   // no collisions then calls PlaceNode otherwise split rect and try again
 
-  if (rect.GetArea() > 1700)
+  if (rect.GetArea() > 1000)
   { // If the rect area is above predetermined value check for node placement
 
     // Work out the width and height of the rect to use incase of collision

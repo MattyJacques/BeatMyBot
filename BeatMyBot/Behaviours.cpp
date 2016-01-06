@@ -5,6 +5,7 @@
 #include "Behaviours.h"
 #include "rules.h"            // For game rule definitions
 #include "staticmap.h"        // For InsideBlock() and NormalToSurface()
+#include "Renderer.h"         // Debug drawing
 
 
 Behaviours::Behaviours()
@@ -112,18 +113,26 @@ Vector2D Behaviours::WallAvoid(Vector2D botPosition, Vector2D botVelocity)
   // the avoid nearby walls
 
   // Create circle for testing if going to collide
-  Circle2D colCircle(botPosition, 130);
+  Circle2D bigCol(botPosition, 100);      // Potential collision
+  Circle2D smallCol(botPosition, 60);     // Immediate collision
+
+  Vector2D test(botPosition.XValue + 50, botPosition.YValue + 50);
+  Renderer::GetInstance()->DrawLine(botPosition, test);
 
   // Create a Vector2D for velocity and init to 0
   Vector2D desiredVelocity;
   desiredVelocity.set(0, 0);
   
-  if (StaticMap::GetInstance()->IsInsideBlock(colCircle))
+  if (StaticMap::GetInstance()->IsInsideBlock(bigCol))
   { // If there is a block inside the col circle, create velocity in opposite
     // direction
 
-    desiredVelocity = StaticMap::GetInstance()->GetNormalToSurface(colCircle);
-    desiredVelocity *= 80;
+    desiredVelocity = StaticMap::GetInstance()->GetNormalToSurface(bigCol);
+
+    if (StaticMap::GetInstance()->IsInsideBlock(smallCol))
+      desiredVelocity *= 120;
+    else
+      desiredVelocity *= 60;
 
   }
 
