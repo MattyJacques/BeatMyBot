@@ -3,6 +3,7 @@
 #include "rules.h"
 #include "Behaviours.h"
 #include "State.h"
+#include <string>
 
 class Bot : public Behaviours
 {
@@ -24,7 +25,7 @@ protected:
 	int m_iHealth;					// Health (up to 100)
 
   // MAYBE MOVE TO BEHAVIOURS
-  State* pCurrentState;           // Holds the current state of the bot
+  
   std::vector<Vector2D> myPath;   // Holds the current path for the bot
 
 	Vector2D targetPoint;			// Used only by Chris's AI
@@ -32,6 +33,10 @@ protected:
   
 
 public:
+  // public for debug
+  State* pCurrentState;           // Holds the current state of the bot
+
+
 	Bot();	
 
 	// Runs once each frame. Handles physics, shooting, and calls

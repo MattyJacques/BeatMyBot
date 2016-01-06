@@ -6,6 +6,7 @@
 #include "Pathfinder.h"           // Able to generate a path    
 #include "dynamicObjects.h"       // DP access
 #include "staticmap.h"            // LineOfSight()
+#include "Defend.h"               // To switch to defend after capture
 
 
 // Initialise pInstance as nullptr
@@ -14,7 +15,7 @@ Capture* Capture::pInstance = nullptr;
 
 Capture::Capture()
 {
-
+  name = "Capturing";
 } // Capture()
 
 
@@ -47,7 +48,7 @@ void Capture::Execute(Bot* pBot)
     DynamicObjects::GetInstance()->m_iNumPlacedDominationPoints > 0)
   { // If bot is alive and we have no path and DPs are placed, get a path
 
-    pBot->domTarget = &DynamicObjects::GetInstance()->GetDominationPoint(0);
+    pBot->pDomTarget = &DynamicObjects::GetInstance()->GetDominationPoint(0);
     GetPath(pBot);
 
   }
@@ -66,6 +67,10 @@ void Capture::Execute(Bot* pBot)
     pBot->SetAcceleration(pBot->Accumulate(DynamicObjects::GetInstance()->GetDominationPoint(0).m_Location, Vector2D(0, 0),
       pBot->GetLocation(), pBot->GetVelocity(), pBot->GetPath()));
 
+    // Switch to defend after capturing DP
+    if (pBot->pDomTarget->m_OwnerTeamNumber == pBot->GetTeamNumber())
+      pBot->ChangeState(Defend::GetInstance());
+
   } // If alive and DPs are placed
 
 } // Execute()
@@ -82,7 +87,7 @@ void Capture::GetPath(Bot* pBot)
   // to the generated path
 
   pBot->SetPath(&Pathfinder::GetInstance()->GeneratePath(pBot->GetLocation(),
-    pBot->domTarget->m_Location));
+    pBot->pDomTarget->m_Location));
 
 } // GetPath()
 
@@ -90,7 +95,7 @@ void Capture::GetPath(Bot* pBot)
 void Capture::SetTarget(Bot* pBot, DominationPoint* target)
 { // Sets the DP target of the bot with the given parameter
 
-  pBot->domTarget = target;
+  pBot->pDomTarget = target;
 
 } // SetTarget()
 

@@ -5,7 +5,6 @@
 #pragma once
 
 
-#include "State.h"  // For inheritance
 #include "bot.h"    // For definition of bot type
 
 
@@ -19,6 +18,8 @@ private:
   Capture();
 
 public:
+  std::string name;
+
   // Returns the instance of the class, if none currently exists create one
   static Capture* GetInstance();
 

@@ -12,8 +12,8 @@ void Bot::Update(float frametime)
 {
 	if(m_iOwnTeamNumber==0)
 		ProcessAI();
-	//else
-		//ProcessAIBadly();
+	else
+		ProcessAIBadly();
 
 	// Check for respawn
 	if(this->m_dTimeToRespawn>0)

@@ -13,7 +13,7 @@ Attack* Attack::pInstance = nullptr;
 
 Attack::Attack()
 {
-
+  name = "Attacking";
 } // Attack()
 
 
@@ -54,9 +54,12 @@ void Attack::Execute(Bot* pBot)
     { // Check if distance is below set amount, if so start aiming and check
       // accuracy
 
-      // Tells the bot to start aiming at target
-      pBot->SetTarget(pBot->pTarget->GetTeamNumber(), 
-        pBot->pTarget->GetBotNumber());
+      if (pBot->GetTargetTeam() == 1)
+      { // Tells the bot to start aiming at target if not already
+
+        pBot->SetTarget(pBot->pTarget->GetTeamNumber(),
+                        pBot->pTarget->GetBotNumber());
+      }
 
       // If accuracy is above set amount, shoot at enemy
       if (pBot->GetAccuracy() >= 0.8)

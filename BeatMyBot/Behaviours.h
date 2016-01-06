@@ -24,7 +24,7 @@ private:
 
 public:
   Bot* pTarget;                 // Holds pointer to a target bot
-  DominationPoint* domTarget;   // Holds pointer to a target DP
+  DominationPoint* pDomTarget;   // Holds pointer to a target DP
   
   // Constructor initialises all variables within class to null etc
   Behaviours();

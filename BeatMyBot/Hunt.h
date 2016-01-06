@@ -5,7 +5,7 @@
 #pragma once
 
 
-#include "State.h"          // For inheritance
+#include "bot.h"
 
 
 class Hunt
@@ -18,6 +18,8 @@ private:
   Hunt();
 
 public:
+  std::string name;
+
   // Returns the instance of the class, if none currently exists create one
   static Hunt* GetInstance();
 
