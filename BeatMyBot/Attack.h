@@ -17,7 +17,7 @@ private:
   Attack();
 
 public:
-  std::string name;
+  char name[11];
 
   // Returns the instance of the class, if none currently exists create one
   static Attack* GetInstance();
@@ -34,6 +34,8 @@ public:
 
   // Tidies up after the state activity is completed
   void Exit(Bot* pBot);
+
+  char* GetStateName();
 
   // If called while pInstance is valid, deletes and defines as nullptr
   static void Release();

@@ -4,6 +4,7 @@
 #include "renderer.h"
 #include "Pathfinder.h"
 #include "Capture.h"
+#include <string>
 #include <cmath>
 //
 			

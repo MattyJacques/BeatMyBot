@@ -18,7 +18,7 @@ private:
   Capture();
 
 public:
-  std::string name;
+  char name[11];
 
   // Returns the instance of the class, if none currently exists create one
   static Capture* GetInstance();
@@ -39,6 +39,8 @@ public:
 
   // Sets the DP target of the bot with the given parameter
   void SetTarget(Bot* pBot, DominationPoint* target);
+
+  char* GetStateName();
 
   // If pInstance is valid, deletes the instance then defines al nullptr
   static void Release();

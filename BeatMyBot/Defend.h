@@ -18,7 +18,7 @@ private:
   Defend();
 
 public:
-  std::string name;
+  char name[11];
 
   // Returns the instance of the class, if none currently exists create one
   static Defend* GetInstance();
@@ -43,6 +43,8 @@ public:
 
   // Checks all enemy bots to see if any are close to the DP we are defending
   void IsEnemyClose(Bot* pBot);
+
+  char* GetStateName();
 
   // If called while pInstance is valid, deletes and defines as nullptr
   static void Release();

@@ -15,7 +15,7 @@ Capture* Capture::pInstance = nullptr;
 
 Capture::Capture()
 {
-  name = "Capturing";
+  sprintf_s(name, "Capturing");
 } // Capture()
 
 
@@ -98,6 +98,12 @@ void Capture::SetTarget(Bot* pBot, DominationPoint* target)
   pBot->pDomTarget = target;
 
 } // SetTarget()
+
+
+char* Capture::GetStateName()
+{
+  return name;
+}
 
 
 void Capture::Release()

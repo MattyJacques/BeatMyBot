@@ -13,7 +13,7 @@ Attack* Attack::pInstance = nullptr;
 
 Attack::Attack()
 {
-  name = "Attacking";
+  sprintf_s(name, "Attacking");
 } // Attack()
 
 
@@ -91,6 +91,12 @@ void Attack::Exit(Bot* pBot)
 { // Tidies up after the state activity is completed
 
 } // Exit()
+
+
+char* Attack::GetStateName()
+{
+  return name;
+}
 
 
 void Attack::Release()

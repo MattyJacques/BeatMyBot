@@ -108,15 +108,14 @@ ErrorType Game::RunInterface()
   // Display Bot States
   for (int i = 0; i < NUMBOTSPERTEAM; i++)
   {
-    wchar_t* stateName = new wchar_t[DynamicObjects::GetInstance()->GetBot(0, i).pCurrentState->name.length() + 1];
-    std::copy(DynamicObjects::GetInstance()->GetBot(0, i).pCurrentState->name.begin(), DynamicObjects::GetInstance()->GetBot(0, i).pCurrentState->name.end(), stateName);
+    wchar_t stateName[11];
+    mbstowcs(stateName, DynamicObjects::GetInstance()->GetBot(0, i).pCurrentState->GetStateName(), 11);
 
-
-    Vector2D pos(10.0f, i*50.0f + 10.0f);
+    Vector2D pos(10.0f, i*50.0f + 100.0f);
     pTheRenderer->DrawTextAt(pos, L"Bot ");
-    pos.set(75.0f, i*50.0f + 10.0f);
+    pos.set(42.5f, i*50.0f + 100.0f);
     pTheRenderer->DrawNumberAt(pos, i + 1);
-    pos.set(105.0f, i*50.0f + 10.0f);
+    pos.set(65.0f, i*50.0f + 100.0f);
     pTheRenderer->DrawTextAt(pos, stateName);
   }
 

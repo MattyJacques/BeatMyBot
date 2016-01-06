@@ -12,7 +12,7 @@ Defend* Defend::pInstance = nullptr;
 
 Defend::Defend()
 { // Private constructor to avoid unauth access
-  name = "Defending";
+  sprintf_s(name, "Defending");
 } // Defend()
 
 
@@ -145,6 +145,12 @@ void Defend::IsEnemyClose(Bot* pBot)
   pBot->pTarget = closestBot;     // Save the target for attack
 
 } // IsEnemyClose()
+
+
+char* Defend::GetStateName()
+{
+  return name;
+}
 
 
 void Defend::Release()

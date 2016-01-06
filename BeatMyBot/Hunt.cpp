@@ -2,5 +2,10 @@
 
 Hunt::Hunt()
 {
-  name = "Hunting";
+  sprintf_s(name, "Hunting");
+}
+
+char* Hunt::GetStateName()
+{
+  return name;
 }
