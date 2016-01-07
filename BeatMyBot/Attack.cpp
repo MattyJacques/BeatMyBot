@@ -52,10 +52,10 @@ void Attack::Execute(Bot* pBot)
     { // Check if distance is below set amount, if so start aiming and check
       // accuracy
 
-      if (pBot->GetTargetTeam() == 1)
+      if (pBot->GetTargetTeam() != pBot->GetTeamNumber() + 1)
       { // Tells the bot to start aiming at target if not already
 
-        pBot->SetTarget(1, pBot->botTarget);
+        pBot->SetTarget(pBot->GetTeamNumber() + 1 == 1, pBot->botTarget);
       }
 
       // If accuracy is above set amount, shoot at enemy
@@ -66,7 +66,7 @@ void Attack::Execute(Bot* pBot)
 
   } // if LineOfSight()
 
-  if (!DynamicObjects::GetInstance()->GetBot(1, pBot->botTarget).IsAlive() || !pBot->IsAlive())
+  if (!DynamicObjects::GetInstance()->GetBot(pBot->GetTeamNumber() + 1 == 1, pBot->botTarget).IsAlive() || !pBot->IsAlive())
   {
     pBot->botTarget = -1;
     pBot->ChangeState(pBot->pPreviousState);
@@ -78,7 +78,8 @@ void Attack::Execute(Bot* pBot)
 
 void Attack::Exit(Bot* pBot)
 { // Tidies up after the state activity is completed
-
+  pBot->botTarget = -1;
+  pBot->domTarget = -1;
 } // Exit()
 
 

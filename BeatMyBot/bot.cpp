@@ -339,7 +339,8 @@ void Bot::ProcessAI()
 {
   
   pCurrentState->Execute(this);
-  //Pathfinder::GetInstance()->PathDebug(myPath);
+
+  Pathfinder::GetInstance()->PathDebug(myPath);
 
   /*if (IsAlive())
   {
@@ -353,6 +354,10 @@ void Bot::ProcessAI()
 void Bot::ChangeState(State* newState)
 { // Uses the pointer given as a parameter to the current active state for
   // the bot
+
+  // If were in a state, run exit otherwise just switch states
+  if (pCurrentState)
+  pCurrentState->Exit(this);
 
   pPreviousState = pCurrentState;
   pCurrentState = newState;

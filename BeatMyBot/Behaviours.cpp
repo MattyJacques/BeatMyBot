@@ -19,6 +19,9 @@ Behaviours::Behaviours()
   avoidWallsSwitch = true;
   followPathSwitch = true;
   domTarget = -1;
+  botTarget = -1;
+  pCurrentState = nullptr;
+  pPreviousState = nullptr;
 
 } // Behaviours()
 

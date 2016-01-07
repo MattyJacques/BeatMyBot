@@ -124,6 +124,8 @@ ErrorType Game::RunInterface()
 
     pos.set(110.0f, i*50.0f + 100.0f);
     pTheRenderer->DrawTextAt(pos, stateName);
+    pos.set(200.0f, i*50.0f + 100.0f);
+    pTheRenderer->DrawNumberAt(pos, DynamicObjects::GetInstance()->GetBot(0, i).domTarget);
 
   }
 

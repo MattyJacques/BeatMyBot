@@ -44,12 +44,15 @@ void Capture::Execute(Bot* pBot)
 { // Checks to see if there is a lineofsight to a DP, if so switches behaviours
   // otherwise just continue following path
 
+  if (pBot->domTarget == -1)
+    pBot->domTarget = pBot->GetBotNumber() % 3;
+
   // EDIT THIS FOR CUSTOM CAPTURE
   if (pBot->IsAlive() && pBot->GetPath()->size() == 0 && 
     DynamicObjects::GetInstance()->m_iNumPlacedDominationPoints > 0)
   { // If bot is alive and we have no path and DPs are placed, get a path
 
-    SetTarget(pBot, 0);
+    SetTarget(pBot, pBot->domTarget);
     GetPath(pBot);
 
   }
@@ -58,14 +61,14 @@ void Capture::Execute(Bot* pBot)
   { // If alive and DPs are placed, check for line of sight
 
     if (StaticMap::GetInstance()->IsLineOfSight(pBot->GetLocation(),
-      DynamicObjects::GetInstance()->GetDominationPoint(0).m_Location))
+      DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location))
     { // If we can see the DP, turn on seek and wall avoid
       
       pBot->SetBehaviours(1, 0, 0, 0, 0, 1, 0);
 
     }
 
-    pBot->SetAcceleration(pBot->Accumulate(DynamicObjects::GetInstance()->GetDominationPoint(0).m_Location, Vector2D(0, 0),
+    pBot->SetAcceleration(pBot->Accumulate(DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location, Vector2D(0, 0),
       pBot->GetLocation(), pBot->GetVelocity(), pBot->GetPath()));
 
     // Switch to defend after capturing DP
@@ -79,7 +82,8 @@ void Capture::Execute(Bot* pBot)
 
 void Capture::Exit(Bot* pBot)
 { // Tidies up after the state activity has completed
-
+  pBot->botTarget = -1;
+  pBot->domTarget = -1;
 } // Exit()
 
 

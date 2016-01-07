@@ -102,7 +102,7 @@ void Pathfinder::GetRect(Rectangle2D rect)
       PlaceNode(nodePos);
     }
 
-  } // If area > 1700
+  } // If area > 1000
 
 } // GetRect()
 
@@ -287,9 +287,9 @@ void Pathfinder::PathDebug(std::vector<Vector2D> drawPath)
     }
   }
 
-  for (Node i : nodeList)
+  /*for (Node i : nodeList)
   {
     Renderer::GetInstance()->DrawDot(i.position);
-  }
+  }*/
 
 } // PathDebug()

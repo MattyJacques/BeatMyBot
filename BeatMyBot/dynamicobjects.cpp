@@ -165,6 +165,7 @@ ErrorType DynamicObjects::Render()
 			// If it's alive, draw a circle and a line.
 			if(currentBot.IsAlive())
 			{
+
 				if(pRenderer->DrawBot(currentBot.GetLocation(), currentBot.GetDirection() , i) == FAILURE)
 				{
 					ErrorLogger::Writeln(L"Renderer failed to draw a bot");

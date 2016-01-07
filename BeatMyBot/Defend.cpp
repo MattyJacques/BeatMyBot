@@ -70,14 +70,15 @@ void Defend::Execute(Bot* pBot)
 
   } // If alive and DPs are placed
   else
-    pBot->domTarget = -1; // Else if we are dead, reset
+    pBot->domTarget = -1; // Else if we are dead, reset target
 
 } // Execute()
 
 
 void Defend::Exit(Bot* pBot)
 {
-
+  pBot->botTarget = -1;
+  pBot->domTarget = -1;
 } // Exit()
 
 
@@ -89,8 +90,12 @@ void Defend::SetTarget(Bot* pBot, int target)
   else
     pBot->domTarget = target;
 
-  pBot->SetPath(&Pathfinder::GetInstance()->GeneratePath(pBot->GetLocation(),
-    DynamicObjects::GetInstance()->GetDominationPoint(target).m_Location));
+  if (StaticMap::GetInstance()->IsLineOfSight(pBot->GetLocation(), 
+    DynamicObjects::GetInstance()->GetDominationPoint(target).m_Location))
+  {
+    pBot->SetPath(&Pathfinder::GetInstance()->GeneratePath(pBot->GetLocation(),
+     DynamicObjects::GetInstance()->GetDominationPoint(target).m_Location));
+  }
 
 } // SetTarget()
 
