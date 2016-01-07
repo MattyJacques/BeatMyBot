@@ -36,10 +36,10 @@ public:
 
   // Set bots DP target to given value, if value is null find closest DP, also
   // gets path to the target and sets to bots path
-  void SetTarget(Bot* pBot, DominationPoint* pTarget);
+  void SetTarget(Bot* pBot, int target);
 
   // Returns the closest DP to the bots location
-  DominationPoint* GetClosestDP(Bot* pBot);
+  int GetClosestDP(Bot* pBot);
 
   // Checks all enemy bots to see if any are close to the DP we are defending
   void IsEnemyClose(Bot* pBot);

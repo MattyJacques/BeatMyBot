@@ -32,8 +32,8 @@ Defend* Defend::GetInstance()
 void Defend::Enter(Bot* pBot)
 { // Sets behaviours for defend state
 
-  pBot->pDomTarget = nullptr;
-  pBot->pTarget = nullptr;
+  pBot->domTarget = -1;
+  pBot->botTarget = -1;
   pBot->SetBehaviours(0, 0, 0, 0, 0, 1, 1); // Wall avoid and follow path
 
 } // Enter()
@@ -48,14 +48,14 @@ void Defend::Execute(Bot* pBot)
   if (pBot->IsAlive() && DynamicObjects::GetInstance()->m_iNumPlacedDominationPoints > 0)
   {
     // If we don't have a target, create one
-    if (!pBot->pDomTarget)
-      SetTarget(pBot, pBot->pDomTarget);
+    if (pBot->domTarget == -1)
+      SetTarget(pBot, -1);
 
-    pBot->SetAcceleration(pBot->Accumulate(pBot->pDomTarget->m_Location,
+    pBot->SetAcceleration(pBot->Accumulate(DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location,
       Vector2D(0, 0), pBot->GetLocation(), pBot->GetVelocity(), pBot->GetPath()));
 
     if (StaticMap::GetInstance()->IsLineOfSight(pBot->GetLocation(),
-      pBot->pDomTarget->m_Location))
+      DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location))
     { // If we can see the DP, switch behaviours
 
       pBot->SetBehaviours(1, 0, 0, 0, 0, 1, 0); // Wall avoid and seek
@@ -64,10 +64,9 @@ void Defend::Execute(Bot* pBot)
 
     IsEnemyClose(pBot);  // Check if any enemys are close to the DP
 
-    if (pBot->pTarget)
+    if (pBot->botTarget != -1)
     { // If we have a target, switch to the attack state
-      pBot->SetTarget(pBot->pTarget->GetTeamNumber(),
-        pBot->pTarget->GetBotNumber());
+      pBot->SetTarget(1, pBot->botTarget);
       pBot->ChangeState(Attack::GetInstance());
     }
 
@@ -81,24 +80,24 @@ void Defend::Exit(Bot* pBot)
 }
 
 
-void Defend::SetTarget(Bot* pBot, DominationPoint* pTarget)
+void Defend::SetTarget(Bot* pBot, int target)
 { // Set bots DP target to given value, if value is null find closest DP
 
-  if (!pTarget)
-    pBot->pDomTarget = GetClosestDP(pBot);
+  if (target == -1)
+    pBot->domTarget = GetClosestDP(pBot);
   else
-    pBot->pDomTarget = pTarget;
+    pBot->domTarget = target;
 
   pBot->SetPath(&Pathfinder::GetInstance()->GeneratePath(pBot->GetLocation(),
-    pBot->pDomTarget->m_Location));
+    DynamicObjects::GetInstance()->GetDominationPoint(target).m_Location));
 
 } // SetTarget()
 
 
-DominationPoint* Defend::GetClosestDP(Bot* pBot)
+int Defend::GetClosestDP(Bot* pBot)
 { // Returns the closest DP to the bots location
 
-  DominationPoint* closestDP = nullptr;   // Holds the closest DP
+  int closestDP = -1;   // Holds the closest DP
   float closeDis = FLT_MAX; // Holds closest DP distance
 
   for (int i = 0; i < NUMDOMINATIONPOINTS; i++)
@@ -110,7 +109,7 @@ DominationPoint* Defend::GetClosestDP(Bot* pBot)
       < closeDis)
     { // Store data on closest DP if new closest has been found
       closeDis = DynamicObjects::GetInstance()->GetDominationPoint(i).m_Location.magnitude();
-      closestDP = &DynamicObjects::GetInstance()->GetDominationPoint(i);
+      closestDP = i;
     }
 
   }
@@ -124,7 +123,7 @@ void Defend::IsEnemyClose(Bot* pBot)
 { // Checks all enemy bots to see if any are close to the DP we are defending
   // and stores the closest bot to the DP
 
-  Bot* closestBot = nullptr;
+  int closestBot = -1;
   float closestDist = FLT_MAX;
 
   for (int i = 0; i < NUMBOTSPERTEAM; i++)
@@ -134,15 +133,15 @@ void Defend::IsEnemyClose(Bot* pBot)
     // Checks to see if the enemy is close and is the closest found so far.
     // If so, store pointer
     if ((DynamicObjects::GetInstance()->GetBot(1, i).GetLocation() -
-      pBot->pDomTarget->m_Location).magnitude() < 40 &&
+      DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location).magnitude() < 40 &&
       (DynamicObjects::GetInstance()->GetBot(1, i).GetLocation() -
-        pBot->pDomTarget->m_Location).magnitude() < closestDist)
+        DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location).magnitude() < closestDist)
     {
-      closestBot = &DynamicObjects::GetInstance()->GetBot(1, i);
+      closestBot = i;
     }
   }
 
-  pBot->pTarget = closestBot;     // Save the target for attack
+  pBot->botTarget = closestBot;     // Save the target for attack
 
 } // IsEnemyClose()
 

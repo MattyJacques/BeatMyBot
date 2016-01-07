@@ -18,6 +18,7 @@ Behaviours::Behaviours()
   fleeSwitch = false;
   avoidWallsSwitch = true;
   followPathSwitch = true;
+  domTarget = -1;
 
 } // Behaviours()
 

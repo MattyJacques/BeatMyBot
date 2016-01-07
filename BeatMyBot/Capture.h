@@ -38,7 +38,7 @@ public:
   void GetPath(Bot* pBot);
 
   // Sets the DP target of the bot with the given parameter
-  void SetTarget(Bot* pBot, DominationPoint* target);
+  void SetTarget(Bot* pBot, int target);
 
   char* GetStateName();
 

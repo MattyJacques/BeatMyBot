@@ -31,8 +31,6 @@ Attack* Attack::GetInstance()
 void Attack::Enter(Bot* pBot)
 { // Sets behaviours for the attack state
 
-  GetTarget(pBot); // GET RID@@@@@@
-
   // Turn on Pursue and avoid walls
   pBot->SetBehaviours(0, 0, 1, 0, 0, 1, 0);
 
@@ -44,21 +42,20 @@ void Attack::Execute(Bot* pBot)
   // enough, aims at bot and fires is accuracy check passes
 
   if (StaticMap::GetInstance()->IsLineOfSight(pBot->GetLocation(), 
-    pBot->pTarget->GetLocation()))
+    DynamicObjects::GetInstance()->GetBot(1, pBot->botTarget).GetLocation()))
   { // If LineOfSight, adjust behaviours and do distance check
 
     // Turn on arrive and avoid walls
     pBot->SetBehaviours(0, 1, 0, 0, 0, 1, 0);
 
-    if ((pBot->GetLocation() - pBot->pTarget->GetLocation()).magnitude() <= 300)
+    if ((pBot->GetLocation() - DynamicObjects::GetInstance()->GetBot(1, pBot->botTarget).GetLocation()).magnitude() <= 300)
     { // Check if distance is below set amount, if so start aiming and check
       // accuracy
 
       if (pBot->GetTargetTeam() == 1)
       { // Tells the bot to start aiming at target if not already
 
-        pBot->SetTarget(pBot->pTarget->GetTeamNumber(),
-                        pBot->pTarget->GetBotNumber());
+        pBot->SetTarget(1,pBot->botTarget);
       }
 
       // If accuracy is above set amount, shoot at enemy
@@ -70,21 +67,6 @@ void Attack::Execute(Bot* pBot)
   } // if LineOfSight()
 
 } // Execute()
-
-
-void Attack::GetTarget(Bot* pBot)
-{ // PROBABLY NOT NEEDED OR ATLEAST MODIFIED
-  int targetTeam;
-
-  if (pBot->GetTeamNumber() == 0)
-    targetTeam = 1;
-  else
-    targetTeam = 0;
-
-
-  pBot->pTarget = &DynamicObjects::GetInstance()->GetBot(targetTeam, 
-                                                         pBot->GetBotNumber());
-} // GetTarget()
 
 
 void Attack::Exit(Bot* pBot)

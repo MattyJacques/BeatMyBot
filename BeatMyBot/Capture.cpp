@@ -33,7 +33,8 @@ Capture* Capture::GetInstance()
 void Capture::Enter(Bot* pBot)
 { // Sets behaviours for the capture state
 
-  pBot->pTarget = nullptr;
+  pBot->botTarget = -1;
+  pBot->domTarget = -1;
   pBot->SetBehaviours(0, 0, 0, 0, 0, 1, 1);
 
 } // Enter()
@@ -48,7 +49,7 @@ void Capture::Execute(Bot* pBot)
     DynamicObjects::GetInstance()->m_iNumPlacedDominationPoints > 0)
   { // If bot is alive and we have no path and DPs are placed, get a path
 
-    pBot->pDomTarget = &DynamicObjects::GetInstance()->GetDominationPoint(0);
+    SetTarget(pBot, 0);
     GetPath(pBot);
 
   }
@@ -68,7 +69,7 @@ void Capture::Execute(Bot* pBot)
       pBot->GetLocation(), pBot->GetVelocity(), pBot->GetPath()));
 
     // Switch to defend after capturing DP
-    if (pBot->pDomTarget->m_OwnerTeamNumber == pBot->GetTeamNumber())
+    if (DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_OwnerTeamNumber == pBot->GetTeamNumber())
       pBot->ChangeState(Defend::GetInstance());
 
   } // If alive and DPs are placed
@@ -87,15 +88,15 @@ void Capture::GetPath(Bot* pBot)
   // to the generated path
 
   pBot->SetPath(&Pathfinder::GetInstance()->GeneratePath(pBot->GetLocation(),
-    pBot->pDomTarget->m_Location));
+    DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location));
 
 } // GetPath()
 
 
-void Capture::SetTarget(Bot* pBot, DominationPoint* target)
+void Capture::SetTarget(Bot* pBot, int target)
 { // Sets the DP target of the bot with the given parameter
 
-  pBot->pDomTarget = target;
+  pBot->domTarget = target;
 
 } // SetTarget()
 

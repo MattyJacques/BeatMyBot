@@ -29,9 +29,6 @@ public:
   // enough, aims at bot and fires is accuracy check passes
   void Execute(Bot* pBot);
 
-  // PROBABLY NOT NEEDED OR WILL NEED TO BE CHANGED
-  void GetTarget(Bot* pBot);
-
   // Tidies up after the state activity is completed
   void Exit(Bot* pBot);
 
