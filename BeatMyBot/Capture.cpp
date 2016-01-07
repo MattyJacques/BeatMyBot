@@ -35,7 +35,7 @@ void Capture::Enter(Bot* pBot)
 
   pBot->botTarget = -1;
   pBot->domTarget = -1;
-  pBot->myPath.empty();
+  pBot->GetPath()->clear();
   pBot->SetBehaviours(0, 0, 0, 0, 0, 1, 1);
 
 } // Enter()

@@ -68,7 +68,7 @@ void Attack::Execute(Bot* pBot)
 
   } // if LineOfSight()
 
-  if (!DynamicObjects::GetInstance()->GetBot(pBot->GetTeamNumber() + 1 == 1, pBot->botTarget).IsAlive() || !pBot->IsAlive())
+  if (!DynamicObjects::GetInstance()->GetBot(pBot->GetTeamNumber() + 1 == 1, pBot->botTarget).IsAlive() || !pBot->IsAlive() || StaticMap::GetInstance()->IsLineOfSight(DynamicObjects::GetInstance()->GetBot(pBot->GetTeamNumber() + 1 == 1, pBot->botTarget).GetLocation(), pBot->GetLocation()))
   {
     pBot->botTarget = -1;
     pBot->ChangeState(Capture::GetInstance());

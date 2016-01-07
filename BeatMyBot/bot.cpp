@@ -354,8 +354,7 @@ void Bot::ProcessAI()
   */
   Vector2D dot;
   dot.set(m_Position.XValue, m_Position.YValue + 20);
-  if (m_iOwnBotNumber == 5)
-    Renderer::GetInstance()->DrawDot(dot, m_iOwnBotNumber);
+  Renderer::GetInstance()->DrawDot(dot, m_iOwnBotNumber);
 
   /*if (IsAlive())
   {
