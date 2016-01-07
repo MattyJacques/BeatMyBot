@@ -114,7 +114,7 @@ ErrorType Game::RunInterface()
     Vector2D pos(10.0f, i*50.0f + 100.0f);
     pTheRenderer->DrawTextAt(pos, L"Bot ");
     pos.set(42.5f, i*50.0f + 100.0f);
-    pTheRenderer->DrawNumberAt(pos, i + 1);
+    pTheRenderer->DrawNumberAt(pos, i);
     pos.set(65.0f, i*50.0f + 100.0f);
     pTheRenderer->DrawTextAt(pos, stateName);
   }

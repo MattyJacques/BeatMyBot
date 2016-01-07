@@ -117,9 +117,6 @@ Vector2D Behaviours::WallAvoid(Vector2D botPosition, Vector2D botVelocity)
   Circle2D bigCol(botPosition, 100);      // Potential collision
   Circle2D smallCol(botPosition, 60);     // Immediate collision
 
-  Vector2D test(botPosition.XValue + 50, botPosition.YValue + 50);
-  Renderer::GetInstance()->DrawLine(botPosition, test);
-
   // Create a Vector2D for velocity and init to 0
   Vector2D desiredVelocity;
   desiredVelocity.set(0, 0);
