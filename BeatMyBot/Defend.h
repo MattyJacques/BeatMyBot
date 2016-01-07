@@ -44,6 +44,16 @@ public:
   // Checks all enemy bots to see if any are close to the DP we are defending
   void IsEnemyClose(Bot* pBot);
 
+  // Decides which behaviours we need for the situation
+  void SetBehaviours(Bot* pBot);
+
+  // Aims at the enemy bot and switches to attack state
+  void AimAttack(Bot* pBot);
+
+  // Check if we can see anybody while defending
+  void CheckLineOfSight(Bot* pBot);
+
+  // Returns the name of the state
   char* GetStateName();
 
   // If called while pInstance is valid, deletes and defines as nullptr

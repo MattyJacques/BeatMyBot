@@ -51,33 +51,34 @@ void Defend::Execute(Bot* pBot)
     if (pBot->domTarget == -1)
       SetTarget(pBot, -1);
 
+    SetBehaviours(pBot); // Check how close we are to DP
+
     pBot->SetAcceleration(pBot->Accumulate(DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location,
       Vector2D(0, 0), pBot->GetLocation(), pBot->GetVelocity(), pBot->GetPath()));
 
-    if (StaticMap::GetInstance()->IsLineOfSight(pBot->GetLocation(),
-      DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location))
-    { // If we can see the DP, switch behaviours
-
-      pBot->SetBehaviours(1, 0, 0, 0, 0, 1, 0); // Wall avoid and seek
-
-    }
-
     IsEnemyClose(pBot);  // Check if any enemys are close to the DP
 
-    if (pBot->botTarget != -1)
-    { // If we have a target, switch to the attack state
-      pBot->SetTarget(1, pBot->botTarget);
-      pBot->ChangeState(Attack::GetInstance());
-    }
+    //// If no enemies are close to DP do we have LOS on any bots
+    //if (pBot->botTarget == -1 && (pBot->GetLocation() -
+    //  DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location).magnitude()
+    //  < DOMINATIONRANGE * 2)
+    //{
+    //  CheckLineOfSight(pBot);
+    //}
+
+    AimAttack(pBot);  // Aim at enemy and change state to attack
 
   } // If alive and DPs are placed
+  else
+    pBot->domTarget = -1; // Else if we are dead, reset
 
 } // Execute()
 
 
 void Defend::Exit(Bot* pBot)
 {
-}
+
+} // Exit()
 
 
 void Defend::SetTarget(Bot* pBot, int target)
@@ -133,7 +134,7 @@ void Defend::IsEnemyClose(Bot* pBot)
     // Checks to see if the enemy is close and is the closest found so far.
     // If so, store pointer
     if ((DynamicObjects::GetInstance()->GetBot(1, i).GetLocation() -
-      DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location).magnitude() < 100 &&
+      DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location).magnitude() < 500 &&
       (DynamicObjects::GetInstance()->GetBot(1, i).GetLocation() -
       DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location).magnitude() < closestDist 
       && DynamicObjects::GetInstance()->GetBot(1, i).IsAlive())
@@ -147,17 +148,65 @@ void Defend::IsEnemyClose(Bot* pBot)
 } // IsEnemyClose()
 
 
-char* Defend::GetStateName()
+void Defend::SetBehaviours(Bot* pBot)
+{ // Checks how close we are to the DP, if we are close, arrive else seek
+
+  if (StaticMap::GetInstance()->IsLineOfSight(pBot->GetLocation(),
+    DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location))
+  { // If we can see the DP, switch behaviours
+
+    if ((pBot->GetLocation() - DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location).magnitude() < DOMINATIONRANGE * 3)
+    { // If we are close to the DP, stand on top of it so enemy can't capture while we are alive
+      pBot->SetBehaviours(0, 1, 0, 0, 0, 1, 0);
+    }
+    else
+    {
+      pBot->SetBehaviours(1, 0, 0, 0, 0, 1, 0); // Wall avoid and seek
+    }
+  }
+
+} // SetBehaviours()
+
+
+void Defend::AimAttack(Bot* pBot)
+{ // Aims at the enemy bot and switches to attack state
+
+  if (pBot->botTarget != -1)
+  { // If we have a target, switch to the attack state
+    pBot->SetTarget(1, pBot->botTarget);
+    pBot->ChangeState(Attack::GetInstance());
+  }
+
+} // AimAttack()
+
+
+void Defend::CheckLineOfSight(Bot* pBot)
 {
+  for (int i = 0; i < MAXBOTSPERTEAM; i++)
+  {
+    if (StaticMap::GetInstance()->IsLineOfSight(pBot->GetLocation(), DynamicObjects::GetInstance()->GetBot(1, i).GetLocation()))
+    {
+      pBot->botTarget = i;
+    }
+  }
+} // CheckLineOfSight()
+
+
+char* Defend::GetStateName()
+{ // Returns the name of the state
+
   return name;
-}
+
+} // GetStateName()
 
 
 void Defend::Release()
 { // If called while pInstance is valid, deletes and defines as nullptr
+
   if (pInstance)
   {
     delete pInstance;
     pInstance = nullptr;
   }
+
 } // Release()

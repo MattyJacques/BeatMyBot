@@ -55,18 +55,18 @@ void Attack::Execute(Bot* pBot)
       if (pBot->GetTargetTeam() == 1)
       { // Tells the bot to start aiming at target if not already
 
-        pBot->SetTarget(1,pBot->botTarget);
+        pBot->SetTarget(1, pBot->botTarget);
       }
 
       // If accuracy is above set amount, shoot at enemy
-      if (pBot->GetAccuracy() >= 0.8)
+      if (pBot->GetAccuracy() >= 0.5)
         pBot->Shoot();
 
     } // if magnitude()
 
   } // if LineOfSight()
 
-  if (!DynamicObjects::GetInstance()->GetBot(1, pBot->botTarget).IsAlive())
+  if (!DynamicObjects::GetInstance()->GetBot(1, pBot->botTarget).IsAlive() || !pBot->IsAlive())
   {
     pBot->botTarget = -1;
     pBot->ChangeState(pBot->pPreviousState);
@@ -83,9 +83,11 @@ void Attack::Exit(Bot* pBot)
 
 
 char* Attack::GetStateName()
-{
+{ // Returns the name of the state
+
   return name;
-}
+
+} // GetStateName()
 
 
 void Attack::Release()

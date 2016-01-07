@@ -40,6 +40,7 @@ public:
   // Sets the DP target of the bot with the given parameter
   void SetTarget(Bot* pBot, int target);
 
+  // Returns the name of the state
   char* GetStateName();
 
   // If pInstance is valid, deletes the instance then defines al nullptr

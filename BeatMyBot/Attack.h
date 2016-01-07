@@ -32,6 +32,7 @@ public:
   // Tidies up after the state activity is completed
   void Exit(Bot* pBot);
 
+  // Returns the name of the state
   char* GetStateName();
 
   // If called while pInstance is valid, deletes and defines as nullptr

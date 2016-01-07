@@ -102,9 +102,11 @@ void Capture::SetTarget(Bot* pBot, int target)
 
 
 char* Capture::GetStateName()
-{
+{ // Returns the name of the state
+
   return name;
-}
+
+} // GetStateName()
 
 
 void Capture::Release()
