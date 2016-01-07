@@ -68,6 +68,9 @@ public:
   // Sets the bots acceleration to the given parameter
   void SetAcceleration(Vector2D accel);
 
+  // Returns the number of ammo the bot has
+  int GetAmmo();
+
 	// This is a quick n' dirty AI for team 2.
 	// Try to make team 1 better than this.
 	// Will be called once each frame from Update

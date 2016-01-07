@@ -5,6 +5,8 @@
 #include "Attack.h"             
 #include "staticmap.h"            // For LineOfSight()
 #include "dynamicObjects.h"       // For GetBot() MAYBE NOT NEEDED
+#include "Reload.h"
+#include "Capture.h"
 
 
 // Initialise pInstance as nullptr
@@ -69,8 +71,11 @@ void Attack::Execute(Bot* pBot)
   if (!DynamicObjects::GetInstance()->GetBot(pBot->GetTeamNumber() + 1 == 1, pBot->botTarget).IsAlive() || !pBot->IsAlive())
   {
     pBot->botTarget = -1;
-    pBot->ChangeState(pBot->pPreviousState);
+    pBot->ChangeState(Capture::GetInstance());
   }
+
+  if (pBot->GetAmmo() == 0)
+    pBot->ChangeState(Reload::GetInstance());
 
 
 } // Execute()

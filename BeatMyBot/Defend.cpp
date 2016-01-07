@@ -6,6 +6,7 @@
 #include "Pathfinder.h"
 #include "staticmap.h"
 #include "Attack.h"
+#include "Capture.h"
 
 // Initalise to null to avoid junk
 Defend* Defend::pInstance = nullptr;
@@ -70,8 +71,10 @@ void Defend::Execute(Bot* pBot)
 
   } // If alive and DPs are placed
   else
+  {
     pBot->domTarget = -1; // Else if we are dead, reset target
-
+    pBot->ChangeState(Capture::GetInstance());
+  }
 } // Execute()
 
 
@@ -90,7 +93,7 @@ void Defend::SetTarget(Bot* pBot, int target)
   else
     pBot->domTarget = target;
 
-  if (StaticMap::GetInstance()->IsLineOfSight(pBot->GetLocation(), 
+  if (!StaticMap::GetInstance()->IsLineOfSight(pBot->GetLocation(), 
     DynamicObjects::GetInstance()->GetDominationPoint(target).m_Location))
   {
     pBot->SetPath(&Pathfinder::GetInstance()->GeneratePath(pBot->GetLocation(),
@@ -160,7 +163,7 @@ void Defend::SetBehaviours(Bot* pBot)
     DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location))
   { // If we can see the DP, switch behaviours
 
-    if ((pBot->GetLocation() - DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location).magnitude() < DOMINATIONRANGE * 3)
+    if ((pBot->GetLocation() - DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location).magnitude() < DOMINATIONRANGE * 5)
     { // If we are close to the DP, stand on top of it so enemy can't capture while we are alive
       pBot->SetBehaviours(0, 1, 0, 0, 0, 1, 0);
     }

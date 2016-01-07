@@ -342,6 +342,21 @@ void Bot::ProcessAI()
 
   Pathfinder::GetInstance()->PathDebug(myPath);
 
+
+  /*
+    BOT COLOURS
+    0 = Red
+    1 = Dark Blue
+    2 = Green
+    3 = Pink
+    4 = Light Blue
+    5 = Yellow
+  */
+  Vector2D dot;
+  dot.set(m_Position.XValue, m_Position.YValue + 20);
+  if (m_iOwnBotNumber == 5)
+    Renderer::GetInstance()->DrawDot(dot, m_iOwnBotNumber);
+
   /*if (IsAlive())
   {
     m_Acceleration = Accumulate(pTarget->GetLocation(), pTarget->GetVelocity(),
@@ -372,6 +387,14 @@ void Bot::SetAcceleration(Vector2D accel)
   m_Acceleration = accel;
 
 } // SetAcceleration()
+
+
+int Bot::GetAmmo()
+{ // Returns the number of ammo the bot has
+
+  return m_iAmmo;
+  
+} // GetAmmo()
 
 
 void Bot::ProcessAIBadly()

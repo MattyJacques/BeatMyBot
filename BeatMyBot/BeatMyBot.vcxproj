@@ -101,6 +101,7 @@
     <ClCompile Include="mysoundengine.cpp" />
     <ClCompile Include="Networking.cpp" />
     <ClCompile Include="Pathfinder.cpp" />
+    <ClCompile Include="Reload.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="Shapes.cpp" />
     <ClCompile Include="State.cpp" />
@@ -127,6 +128,7 @@
     <ClInclude Include="mysoundengine.h" />
     <ClInclude Include="Networking.h" />
     <ClInclude Include="Pathfinder.h" />
+    <ClInclude Include="Reload.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="rules.h" />
     <ClInclude Include="Shapes.h" />
