@@ -78,9 +78,6 @@
     <ClCompile Include="State.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Hunt.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Defend.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -162,9 +159,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Defend.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Hunt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

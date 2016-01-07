@@ -6,6 +6,7 @@
 
 #include "vector2D.h"       // Vector2D functionality
 #include <vector>           // Vector to hold path
+#include "State.h"
 
 class Bot;                  // Promise there is a bot class
 struct DominationPoint;     // Gives knowledge of a DP struct
@@ -23,8 +24,11 @@ private:
  
 
 public:
-  int botTarget;                 // Holds pointer to a target bot
-  int domTarget;
+  int botTarget;                 // Holds ID to a target bot
+  int domTarget;                 // Holds ID of the dom target
+  State* pCurrentState;          // Holds the current state of the bot
+  State* pPreviousState;         // Holds the previous state of the bot
+  std::vector<Vector2D> myPath;   // Holds the current path for the bot
   
   // Constructor initialises all variables within class to null etc
   Behaviours();
@@ -33,6 +37,12 @@ public:
   // provided
   void SetBehaviours(bool doSeek, bool doArrive, bool doPursue, bool doEvade,
                      bool doFlee, bool doWalls, bool doPath);
+
+  // Sets the bots path to the given parameter
+  void SetPath(std::vector<Vector2D>* thePath);
+
+  // Returns the current path stored in the bot
+  std::vector<Vector2D>* GetPath();
 
   // Takes in target position and returns desired velocity to reach the target
   Vector2D Seek(Vector2D targetPosition, Vector2D botPosition,

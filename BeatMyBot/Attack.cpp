@@ -66,6 +66,13 @@ void Attack::Execute(Bot* pBot)
 
   } // if LineOfSight()
 
+  if (!DynamicObjects::GetInstance()->GetBot(1, pBot->botTarget).IsAlive())
+  {
+    pBot->botTarget = -1;
+    pBot->ChangeState(pBot->pPreviousState);
+  }
+
+
 } // Execute()
 
 

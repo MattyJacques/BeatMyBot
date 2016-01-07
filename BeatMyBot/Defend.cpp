@@ -129,13 +129,14 @@ void Defend::IsEnemyClose(Bot* pBot)
   for (int i = 0; i < NUMBOTSPERTEAM; i++)
   { // Loop through all enemy bots to test if they are close to the DP
 
-    // MAYBE NEED ISALIVE CHECK - TEST IT
+    // THIS LOOKS NASTY
     // Checks to see if the enemy is close and is the closest found so far.
     // If so, store pointer
     if ((DynamicObjects::GetInstance()->GetBot(1, i).GetLocation() -
       DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location).magnitude() < 100 &&
       (DynamicObjects::GetInstance()->GetBot(1, i).GetLocation() -
-        DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location).magnitude() < closestDist)
+      DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location).magnitude() < closestDist 
+      && DynamicObjects::GetInstance()->GetBot(1, i).IsAlive())
     {
       closestBot = i;
     }

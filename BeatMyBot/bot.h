@@ -2,7 +2,6 @@
 #include "shapes.h"
 #include "rules.h"
 #include "Behaviours.h"
-#include "State.h"
 #include <string>
 
 class Bot : public Behaviours
@@ -24,19 +23,11 @@ protected:
 	float m_dAccuracy;				// Accuracy of the current firing solution (1==100%)
 	int m_iHealth;					// Health (up to 100)
 
-  // MAYBE MOVE TO BEHAVIOURS
-  
-  std::vector<Vector2D> myPath;   // Holds the current path for the bot
-
 	Vector2D targetPoint;			// Used only by Chris's AI
 
   
 
 public:
-  // public for debug
-  State* pCurrentState;           // Holds the current state of the bot
-
-
 	Bot();	
 
 	// Runs once each frame. Handles physics, shooting, and calls
@@ -74,13 +65,7 @@ public:
   // the bot
   void ChangeState(State* newState);
 
-  // Returns the current path stored in the bot
-  std::vector<Vector2D>* GetPath();
-
-  // Sets the bots path to the given parameter
-  void SetPath(std::vector<Vector2D>* thePath);
-
-  // Sets the bots acceleration to th given parameter
+  // Sets the bots acceleration to the given parameter
   void SetAcceleration(Vector2D accel);
 
 	// This is a quick n' dirty AI for team 2.

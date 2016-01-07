@@ -39,6 +39,22 @@ void Behaviours::SetBehaviours(bool doSeek, bool doArrive, bool doPursue,
 } // SetBehaviours()
 
 
+std::vector<Vector2D>* Behaviours::GetPath()
+{ // Returns the current path stored in the bot
+
+  return &myPath;
+
+} // GetPath()
+
+
+void Behaviours::SetPath(std::vector<Vector2D>* thePath)
+{ // Sets the bots path to the given parameter
+
+  myPath = *thePath;
+
+} // SetPath()
+
+
 Vector2D Behaviours::Seek(Vector2D targetPosition, Vector2D botPosition,
                           Vector2D botVelocity)
 { // Takes in target position and returns desired velocity to reach the target
