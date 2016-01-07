@@ -133,7 +133,7 @@ void Defend::IsEnemyClose(Bot* pBot)
     // Checks to see if the enemy is close and is the closest found so far.
     // If so, store pointer
     if ((DynamicObjects::GetInstance()->GetBot(1, i).GetLocation() -
-      DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location).magnitude() < 40 &&
+      DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location).magnitude() < 100 &&
       (DynamicObjects::GetInstance()->GetBot(1, i).GetLocation() -
         DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location).magnitude() < closestDist)
     {
