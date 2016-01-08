@@ -328,7 +328,8 @@ void Bot::TakeDamage(int amount)
 // and calls methods to analyse the map
 void Bot::StartAI()
 {
-  ChangeState(Capture::GetInstance());
+  pCurrentState = nullptr;
+  pPreviousState = nullptr;
 }
 
 // This is your function. Use it to set the orders for the bot.
@@ -337,20 +338,17 @@ void Bot::StartAI()
 // Eventually, this will contain very little code - it just runs the state
 void Bot::ProcessAI()
 {
-  
-  pCurrentState->Execute(this);
+  if (IsAlive())
+  {
+    if (pCurrentState == nullptr)
+      ChangeState(Capture::GetInstance());
+
+    pCurrentState->Execute(this);
+  }
 
   Pathfinder::GetInstance()->PathDebug(myPath);
 
   BotDebug();
-
-
-
-  /*if (IsAlive())
-  {
-    m_Acceleration = Accumulate(pTarget->GetLocation(), pTarget->GetVelocity(),
-      GetLocation(), GetVelocity(), myPath);
-  }*/
 
 }
 
@@ -370,16 +368,6 @@ void Bot::BotDebug()
   Vector2D position = m_Position;
   position.YValue += 20;
   Renderer::GetInstance()->DrawDot(position, m_iOwnBotNumber);
-
-  //switch (m_iOwnBotNumber)
-  //{
-  //case 0:
-  //  position.set(10.0f, m_iOwnBotNumber*50.0f + 100.0f);
-  //  pTheRenderer->DrawTextAt(position, L"Bot ");
-  //  position.set(42.5f, m_iOwnBotNumber*50.0f + 100.0f);
-  //  pTheRenderer->DrawNumberAt(position, m_iOwnBotNumber);
-  //  position.set(10.0f, )
-  //}
 
 } // BotDebug()
 

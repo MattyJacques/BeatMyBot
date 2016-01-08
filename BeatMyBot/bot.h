@@ -61,7 +61,11 @@ public:
 	// Will be called once each frame from Update
 	void ProcessAI();	
 
+  // Debug dots
   void BotDebug();
+
+  // Clears the vector that holds the current path of the bot
+  void ClearPath();
 
   // Uses the pointer given as a parameter to the current active state for
   // the bot
