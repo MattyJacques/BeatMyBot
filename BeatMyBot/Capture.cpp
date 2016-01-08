@@ -6,6 +6,7 @@
 #include "Pathfinder.h"
 #include "dynamicObjects.h"
 #include "staticmap.h"
+#include "Attack.h"
 
 
 Capture* Capture::pInst = nullptr;
@@ -52,7 +53,8 @@ void Capture::Execute(Bot* pBot)
   CheckForEnemy(pBot);
   CheckDPOwner(pBot);
 
-  pBot->SetAcceleration(pBot->Accumulate(DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location, Vector2D(0, 0),
+  pBot->SetAcceleration(pBot->Accumulate(DynamicObjects::GetInstance()->
+    GetDominationPoint(pBot->domTarget).m_Location, Vector2D(0, 0),
     pBot->GetLocation(), pBot->GetVelocity(), pBot->GetPath()));
 
 } // Execute()
@@ -108,15 +110,15 @@ void Capture::CheckForEnemy(Bot* pBot)
   for (int i = 0; i < NUMBOTSPERTEAM; i++)
   {
     // If the bot has a line of the sight to another bot, plus if the distance
-    // is below 100, marks as there is a enemy close and switch to the attack
+    // is below 400, marks as there is a enemy close and switch to the attack
     // state
     if (StaticMap::GetInstance()->IsLineOfSight(pBot->GetLocation(), 
       DynamicObjects::GetInstance()->GetBot(1, i).GetLocation()) && 
       (pBot->GetLocation() - DynamicObjects::GetInstance()->GetBot(1, i).
-      GetLocation()).magnitude() < 400)
+      GetLocation()).magnitude() < 400 && DynamicObjects::GetInstance()->
+      GetBot(1, i).IsAlive())
     {
-      int anInt = 1;
-      // CHANGE WHEN THE ATTACK STATE IS COMPLETE
+      pBot->ChangeState(Attack::GetInstance());
     }
   }
 

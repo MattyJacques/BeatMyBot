@@ -84,6 +84,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Attack.cpp" />
     <ClCompile Include="Behaviours.cpp" />
     <ClCompile Include="bot.cpp" />
     <ClCompile Include="camera.cpp" />
@@ -107,6 +108,7 @@
     <ClCompile Include="wincode.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Attack.h" />
     <ClInclude Include="Behaviours.h" />
     <ClInclude Include="bot.h" />
     <ClInclude Include="camera.h" />
