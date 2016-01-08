@@ -10,6 +10,7 @@
 #include "State.h"
 #include "Capture.h"
 #include "Attack.h"
+#include "Reload.h"
 
 Game* Game::pInst = NULL;
 
@@ -207,7 +208,7 @@ ErrorType Game::End()
   Attack::Release();
   Capture::Release();
   //Defend::Release();
-  //Reload::Release();
+  Reload::Release();
 
 	return SUCCESS;
 }
