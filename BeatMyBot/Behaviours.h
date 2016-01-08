@@ -10,6 +10,7 @@
 
 class Bot;                  // Promise there is a bot class
 struct DominationPoint;     // Gives knowledge of a DP struct
+struct SupplyPoint;         // Gives knowledge of a supply point
 
 class Behaviours
 {
@@ -26,6 +27,7 @@ private:
 public:
   int botTarget;                 // Holds ID to a target bot
   int domTarget;                 // Holds ID of the dom target
+  Vector2D supplyLoc;            // Holds location of supply point
   State* pCurrentState;          // Holds the current state of the bot
   State* pPreviousState;         // Holds the previous state of the bot
   std::vector<Vector2D> myPath;   // Holds the current path for the bot

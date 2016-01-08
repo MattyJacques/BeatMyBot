@@ -115,7 +115,7 @@ void Capture::CheckForEnemy(Bot* pBot)
     if (StaticMap::GetInstance()->IsLineOfSight(pBot->GetLocation(), 
       DynamicObjects::GetInstance()->GetBot(1, i).GetLocation()) && 
       (pBot->GetLocation() - DynamicObjects::GetInstance()->GetBot(1, i).
-      GetLocation()).magnitude() < 400 && DynamicObjects::GetInstance()->
+      GetLocation()).magnitude() <= 400 && DynamicObjects::GetInstance()->
       GetBot(1, i).IsAlive())
     {
       pBot->ChangeState(Attack::GetInstance());

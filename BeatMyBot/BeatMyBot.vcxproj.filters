@@ -81,6 +81,9 @@
     <ClCompile Include="Attack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Reload.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Behaviours.h">
@@ -153,6 +156,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Attack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Reload.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
