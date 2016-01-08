@@ -342,19 +342,9 @@ void Bot::ProcessAI()
 
   Pathfinder::GetInstance()->PathDebug(myPath);
 
+  BotDebug();
 
-  /*
-    BOT COLOURS
-    0 = Red
-    1 = Dark Blue
-    2 = Green
-    3 = Pink
-    4 = Light Blue
-    5 = Yellow
-  */
-  Vector2D dot;
-  dot.set(m_Position.XValue, m_Position.YValue + 20);
-  Renderer::GetInstance()->DrawDot(dot, m_iOwnBotNumber);
+
 
   /*if (IsAlive())
   {
@@ -363,6 +353,35 @@ void Bot::ProcessAI()
   }*/
 
 }
+
+
+void Bot::BotDebug()
+{
+  Renderer* pTheRenderer = Renderer::GetInstance();
+  /*
+  BOT COLOURS
+  0 = Red
+  1 = Dark Blue
+  2 = Green
+  3 = Pink
+  4 = Light Blue
+  5 = Yellow
+  */
+  Vector2D position = m_Position;
+  position.YValue += 20;
+  Renderer::GetInstance()->DrawDot(position, m_iOwnBotNumber);
+
+  //switch (m_iOwnBotNumber)
+  //{
+  //case 0:
+  //  position.set(10.0f, m_iOwnBotNumber*50.0f + 100.0f);
+  //  pTheRenderer->DrawTextAt(position, L"Bot ");
+  //  position.set(42.5f, m_iOwnBotNumber*50.0f + 100.0f);
+  //  pTheRenderer->DrawNumberAt(position, m_iOwnBotNumber);
+  //  position.set(10.0f, )
+  //}
+
+} // BotDebug()
 
 
 void Bot::ChangeState(State* newState)

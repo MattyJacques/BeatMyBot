@@ -37,7 +37,7 @@ void Capture::Enter(Bot* pBot)
   pBot->domTarget = -1;
   pBot->GetPath()->clear();
   pBot->SetBehaviours(0, 0, 0, 0, 0, 1, 1);
-
+  // generate a path
 } // Enter()
 
 
@@ -46,7 +46,7 @@ void Capture::Execute(Bot* pBot)
   // otherwise just continue following path
 
   if (pBot->domTarget == -1)
-    pBot->domTarget = pBot->GetBotNumber() % 3;
+    pBot->domTarget = pBot->GetBotNumber() % 3;   // Entry
 
   // EDIT THIS FOR CUSTOM CAPTURE
   if (pBot->IsAlive() && pBot->GetPath()->size() == 0 && 

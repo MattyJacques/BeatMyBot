@@ -119,16 +119,21 @@ ErrorType Game::RunInterface()
     pos.set(60.5f, i * 50.0f + 100.0f);
 
     if (DynamicObjects::GetInstance()->GetBot(0, i).IsAlive())
-    pTheRenderer->DrawTextAt(pos, L"Alive");
+      pTheRenderer->DrawTextAt(pos, L"Alive");
     else
-    pTheRenderer->DrawTextAt(pos, L"Dead");
+      pTheRenderer->DrawTextAt(pos, L"Dead");
 
     pos.set(110.0f, i*50.0f + 100.0f);
     pTheRenderer->DrawTextAt(pos, stateName);
     pos.set(200.0f, i*50.0f + 100.0f);
     pTheRenderer->DrawNumberAt(pos, DynamicObjects::GetInstance()->GetBot(0, i).domTarget);
+    pos.set(240.0f, i*50.0f + 100.0f);
+    pTheRenderer->DrawNumberAt(pos, DynamicObjects::GetInstance()->GetBot(0, i).botTarget);
+    pos.set(280.0f, i*50.0f + 100.0f);
+    pTheRenderer->DrawNumberAt(pos, DynamicObjects::GetInstance()->GetBot(0, i).GetAmmo());
 
   }
+
 
 	return answer;
 }

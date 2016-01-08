@@ -80,7 +80,6 @@ void Defend::Execute(Bot* pBot)
 
 void Defend::Exit(Bot* pBot)
 {
-  pBot->botTarget = -1;
   pBot->domTarget = -1;
 } // Exit()
 

@@ -132,9 +132,10 @@ Vector2D Behaviours::WallAvoid(Vector2D botPosition, Vector2D botVelocity)
 { // Uses a circle2D as a collision box provided a velocity that can be used
   // the avoid nearby walls
 
+  Vector2D projection = botVelocity.unitVector() * 50;
   // Create circle for testing if going to collide
-  Circle2D bigCol(botPosition, 100);      // Potential collision
-  Circle2D smallCol(botPosition, 60);     // Immediate collision
+  Circle2D bigCol(botPosition+projection, 50);      // Potential collision
+  Circle2D smallCol(botPosition + projection, 30);     // Immediate collision
 
   // Create a Vector2D for velocity and init to 0
   Vector2D desiredVelocity;
@@ -147,9 +148,9 @@ Vector2D Behaviours::WallAvoid(Vector2D botPosition, Vector2D botVelocity)
     desiredVelocity = StaticMap::GetInstance()->GetNormalToSurface(bigCol);
 
     if (StaticMap::GetInstance()->IsInsideBlock(smallCol))
-      desiredVelocity *= 120;
+      desiredVelocity *= 12000;
     else
-      desiredVelocity *= 60;
+      desiredVelocity *= 6000;
 
   }
 

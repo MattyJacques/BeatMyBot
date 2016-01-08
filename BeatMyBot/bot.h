@@ -61,6 +61,8 @@ public:
 	// Will be called once each frame from Update
 	void ProcessAI();	
 
+  void BotDebug();
+
   // Uses the pointer given as a parameter to the current active state for
   // the bot
   void ChangeState(State* newState);

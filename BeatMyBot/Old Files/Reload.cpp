@@ -137,4 +137,10 @@ char* Reload::GetStateName()
 void Reload::Release()
 { // If pInstance is valid, deletes the instance then defines al nullptr
 
+  if (pInstance)
+  {
+    delete pInstance;
+    pInstance = nullptr;
+  }
+
 } // Release()
