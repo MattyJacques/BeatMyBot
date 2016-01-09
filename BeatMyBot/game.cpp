@@ -162,8 +162,6 @@ ErrorType Game::Update()
 	Renderer* pTheRenderer = Renderer::GetInstance();
 
 
-
-
 	// If not paused or minimised
 	if(m_State == RUNNING)
 	// Update Dynamic objects
@@ -188,6 +186,8 @@ ErrorType Game::Update()
     else
     {
       memcpy(DynamicObjects::GetInstance(), Networking::GetInstance()->Recieve(), sizeof(DynamicObjects));
+      if (!DynamicObjects::GetInstance()->m_rgTeams[0].m_rgBots[0].IsAlive())
+        int x = 5;
     }
 		
 	}
@@ -245,7 +245,7 @@ ErrorType Game::End()
   Pathfinder::Release();
 
   if (server)
-  DynamicObjects::Release();
+    DynamicObjects::Release();
 
 	return SUCCESS;
 }
@@ -317,9 +317,8 @@ ErrorType Game::InitialiseScript()
   if (Networking::GetInstance()->WSASetup() == false)
     ErrorLogger::Writeln(L"WSA SETUP FALSE");
 
-  server = true;
-    
   IP = "172.16.1.129";
+  server = true;
 
   if (!Networking::GetInstance()->ServerSetup())
     ErrorLogger::Writeln(L"SERVER SETUP FAIL");

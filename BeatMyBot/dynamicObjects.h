@@ -42,13 +42,15 @@ private:
 	DynamicObjects();
 	~DynamicObjects();
 	DynamicObjects(const DynamicObjects & other);	//Disable
-	Team m_rgTeams[MAXTEAMS];
+	//Team m_rgTeams[MAXTEAMS];
 	DominationPoint m_rgDominationPoints[MAXDOMINATIONPOINTS];
   int m_iNumPlacedDominationPoints;
 	static DynamicObjects* pInst;
 	float m_dNextScorePoint;						// Time until next points get added
 public:
-	static DynamicObjects* GetInstance();			// Thread-safe singleton
+  Team m_rgTeams[MAXTEAMS];
+  
+  static DynamicObjects* GetInstance();			// Thread-safe singleton
 
 	// Deletes pInst
 	static void Release();
