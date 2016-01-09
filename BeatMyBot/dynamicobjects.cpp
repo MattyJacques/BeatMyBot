@@ -56,8 +56,9 @@ void DynamicObjects::Release()		// Static
 {
 	if(pInst)
 	{
+    
 		delete pInst;
-		pInst = NULL;
+    pInst = nullptr;
 	}
 }
 

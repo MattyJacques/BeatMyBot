@@ -13,6 +13,7 @@
 #include "Reload.h"
 #include "Defend.h"
 
+
 Game* Game::pInst = NULL;
 
 Game* Game::GetInstance()
@@ -107,6 +108,8 @@ ErrorType Game::RunInterface()
 	}
 
   // Display Bot States
+  if (server)
+  {
     for (int i = 0; i < NUMBOTSPERTEAM; i++)
     {
       wchar_t stateName[11];
@@ -142,6 +145,7 @@ ErrorType Game::RunInterface()
       pTheRenderer->DrawNumberAt(pos, DynamicObjects::GetInstance()->GetBot(0, i).GetAmmo());
 
     }
+  }
 
 
 	return answer;
@@ -157,11 +161,35 @@ ErrorType Game::Update()
 
 	Renderer* pTheRenderer = Renderer::GetInstance();
 
+
+
+
 	// If not paused or minimised
 	if(m_State == RUNNING)
 	// Update Dynamic objects
 	{
-		DynamicObjects::GetInstance()->Update(m_timer.m_fFrameTime);
+    if (server)
+    {
+      MyInputs* pInput = MyInputs::GetInstance();
+      pInput->SampleKeyboard();
+      if (pInput->KeyPressed(DIK_C))
+      {
+        server = false;
+        Networking::Release();
+        Networking::GetInstance()->WSASetup();
+        Networking::GetInstance()->ConnectToServer(IP);
+      }
+      else
+      {
+        DynamicObjects::GetInstance()->Update(m_timer.m_fFrameTime);
+        Networking::GetInstance()->Send();
+      }
+    }
+    else
+    {
+      memcpy(DynamicObjects::GetInstance(), Networking::GetInstance()->Recieve(), sizeof(DynamicObjects));
+    }
+		
 	}
 
 	// Render
@@ -207,15 +235,17 @@ ErrorType Game::Update()
 
 ErrorType Game::End()
 {
-	Renderer::Release();
-	StaticMap::Release();
-	DynamicObjects::Release();
-  Pathfinder::Release();
   Networking::Release();
+	Renderer::Release();
+  StaticMap::Release();
   Attack::Release();
   Capture::Release();
   Defend::Release();
   Reload::Release();
+  Pathfinder::Release();
+
+  if (server)
+  DynamicObjects::Release();
 
 	return SUCCESS;
 }
@@ -283,6 +313,19 @@ ErrorType Game::InitialiseScript()
 
 	pDynObjects->Initialise();
   Pathfinder::GetInstance()->GenerateNodes();
+
+  if (Networking::GetInstance()->WSASetup() == false)
+    ErrorLogger::Writeln(L"WSA SETUP FALSE");
+
+  server = true;
+    
+  IP = "172.16.1.129";
+
+  if (!Networking::GetInstance()->ServerSetup())
+    ErrorLogger::Writeln(L"SERVER SETUP FAIL");
+
+
+
 
 	return SUCCESS;
 }
