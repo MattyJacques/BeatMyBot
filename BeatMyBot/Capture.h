@@ -40,7 +40,7 @@ public:
   // Sets the domination point target using the ID provided or will work a crude
   // target is the value of -1 is provided as the target parameter also calls
   // GeneratePath to store the path to the target
-  void SetTarget(Bot* pBot, int target);
+  void SetTarget(Bot* pBot);
 
   // Checks to see how close the bot is to the target, if the bot has line of 
   // sight, it switches behaviours to seek from followPath.

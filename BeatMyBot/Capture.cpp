@@ -7,6 +7,7 @@
 #include "dynamicObjects.h"
 #include "staticmap.h"
 #include "Attack.h"
+#include "Defend.h"
 
 
 Capture* Capture::pInst = nullptr;
@@ -37,7 +38,7 @@ void Capture::Enter(Bot* pBot)
 { // Gets the domination point target, then proceeds to generate a path
   // to that domination point, also sets initial behaviours for the state
 
-  SetTarget(pBot, -1);
+  SetTarget(pBot);
   pBot->SetBehaviours(0, 0, 0, 0, 0, 1, 1);
 
 } // Enter()
@@ -66,16 +67,13 @@ void Capture::Exit(Bot* pBot)
 } // Exit()
 
 
-void Capture::SetTarget(Bot* pBot, int target)
+void Capture::SetTarget(Bot* pBot)
 { // Sets the domination point target using the ID provided or will work a crude
   // target is the value of -1 is provided as the target parameter also calls
   // GeneratePath to store the path to the target
 
   // Set the target
-  if (target != -1)
-    pBot->domTarget = target;
-  else
-    pBot->domTarget = pBot->GetBotNumber() % 3;
+  pBot->domTarget = pBot->GetBotNumber() % 3;
 
   // Generate path to domination point
   pBot->SetPath(&Pathfinder::GetInstance()->GeneratePath(pBot->GetLocation(),
@@ -87,8 +85,6 @@ void Capture::SetTarget(Bot* pBot, int target)
 void Capture::CheckDistance(Bot* pBot)
 { // Checks to see how close the bot is to the target, if the bot has line of 
   // sight, it switches behaviours to seek from followPath. 
-
-  DynamicObjects* pDO = DynamicObjects::GetInstance();
 
   // If the bot can see the domination point, check to see if the bot is close.
   // If not close, then switch to seek
@@ -133,8 +129,7 @@ void Capture::CheckDPOwner(Bot* pBot)
   if (DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget)
     .m_OwnerTeamNumber == pBot->GetTeamNumber())
   {
-    int anInt = 1;
-    //CHANGE WHEN DEFENCE STATE IS COMPLETE
+    pBot->ChangeState(Defend::GetInstance());
   }
 
 } // CheckDPOwner()

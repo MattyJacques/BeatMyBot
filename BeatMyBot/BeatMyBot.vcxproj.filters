@@ -72,9 +72,6 @@
     <ClCompile Include="bot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="State.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Capture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

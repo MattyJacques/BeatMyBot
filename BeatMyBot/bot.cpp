@@ -340,11 +340,13 @@ void Bot::ProcessAI()
 {
   if (IsAlive())
   {
-    if (pCurrentState == nullptr)
+    if (!pCurrentState)
       ChangeState(Capture::GetInstance());
 
     pCurrentState->Execute(this);
   }
+  else
+    pCurrentState = nullptr;
 
   Pathfinder::GetInstance()->PathDebug(myPath);
 

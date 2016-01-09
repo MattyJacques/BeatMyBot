@@ -104,7 +104,6 @@
     <ClCompile Include="Reload.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="Shapes.cpp" />
-    <ClCompile Include="State.cpp" />
     <ClCompile Include="staticmap.cpp" />
     <ClCompile Include="vector2D.cpp" />
     <ClCompile Include="wincode.cpp" />

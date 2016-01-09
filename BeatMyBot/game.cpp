@@ -11,6 +11,7 @@
 #include "Capture.h"
 #include "Attack.h"
 #include "Reload.h"
+#include "Defend.h"
 
 Game* Game::pInst = NULL;
 
@@ -106,12 +107,19 @@ ErrorType Game::RunInterface()
 	}
 
   // Display Bot States
-  if (DynamicObjects::GetInstance()->GetBot(0, 0).pCurrentState)
-  {
     for (int i = 0; i < NUMBOTSPERTEAM; i++)
     {
       wchar_t stateName[11];
-      mbstowcs(stateName, DynamicObjects::GetInstance()->GetBot(0, i).pCurrentState->GetStateName(), 11);
+      if (DynamicObjects::GetInstance()->GetBot(0, i).pCurrentState)
+      {
+        mbstowcs(stateName, DynamicObjects::GetInstance()->GetBot(0, i).pCurrentState->GetStateName(), 11);
+      }
+      else
+      {
+        char name[11];
+        sprintf(name, "nullptr");
+        mbstowcs(stateName, name, 11);
+      }
 
       Vector2D pos(10.0f, i*50.0f + 100.0f);
       pTheRenderer->DrawTextAt(pos, L"Bot ");
@@ -134,7 +142,6 @@ ErrorType Game::RunInterface()
       pTheRenderer->DrawNumberAt(pos, DynamicObjects::GetInstance()->GetBot(0, i).GetAmmo());
 
     }
-  }
 
 
 	return answer;
@@ -207,7 +214,7 @@ ErrorType Game::End()
   Networking::Release();
   Attack::Release();
   Capture::Release();
-  //Defend::Release();
+  Defend::Release();
   Reload::Release();
 
 	return SUCCESS;

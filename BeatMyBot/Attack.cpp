@@ -94,7 +94,7 @@ void Attack::GetTarget(Bot* pBot)
     if (StaticMap::GetInstance()->IsLineOfSight(pBot->GetLocation(),
       DynamicObjects::GetInstance()->GetBot(1, i).GetLocation()) &&
       (pBot->GetLocation() - DynamicObjects::GetInstance()->GetBot(1, i).
-      GetLocation()).magnitude() <= 400 && DynamicObjects::GetInstance()->
+      GetLocation()).magnitude() <= 600 && DynamicObjects::GetInstance()->
       GetBot(1, i).IsAlive())
     {
       pBot->botTarget = i;
