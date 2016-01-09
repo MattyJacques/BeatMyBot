@@ -42,8 +42,8 @@ public:
   // Checks if there is a line of sight between the bot and the target bot
   bool HaveLOS(Bot* pBot);
 
-  // Checks to see if the target is dead
-  bool TargetDead(Bot* pBot);
+  // Checks to see if the target is still alive
+  bool TargetAlive(Bot* pBot);
 
   // Returns the distance inbetween the bot and an enemy
   float DistanceToEnemy(Bot* pBot);

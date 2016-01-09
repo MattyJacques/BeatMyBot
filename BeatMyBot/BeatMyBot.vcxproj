@@ -89,6 +89,7 @@
     <ClCompile Include="bot.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="Capture.cpp" />
+    <ClCompile Include="Defend.cpp" />
     <ClCompile Include="dynamicobjects.cpp" />
     <ClCompile Include="ErrorLogger.cpp" />
     <ClCompile Include="game.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="bot.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="Capture.h" />
+    <ClInclude Include="Defend.h" />
     <ClInclude Include="dynamicObjects.h" />
     <ClInclude Include="ErrorLogger.h" />
     <ClInclude Include="errortype.h" />
