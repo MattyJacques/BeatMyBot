@@ -46,7 +46,7 @@ void Reload::Execute(Bot* pBot)
   // to change behaviours, checks ammo to make sure we haven't already 
   // resupplied and sets the acceleration for the bot
 
-  if (pBot->GetAmmo() > 0)
+  if (pBot->GetAmmo() == MAXAMMO)
     pBot->ChangeState(Capture::GetInstance());
 
 
@@ -67,7 +67,8 @@ void Reload::Exit(Bot* pBot)
 void Reload::SetTarget(Bot* pBot)
 { // Gets the closest resupply point and gets the path to that supply point
 
-  pBot->supplyLoc = StaticMap::GetInstance()->GetClosestResupplyLocation(pBot->GetLocation());
+  GetClosestResupply(pBot);
+  //pBot->supplyLoc = StaticMap::GetInstance()->GetClosestResupplyLocation(pBot->GetLocation());
   pBot->SetPath(&Pathfinder::GetInstance()->GeneratePath(pBot->GetLocation(), pBot->supplyLoc));
 
 } // SetTarget()
@@ -82,9 +83,23 @@ void Reload::SetBehaviours(Bot* pBot)
       pBot->SetBehaviours(0, 1, 0, 0, 0, 1, 0);
     else
       pBot->SetBehaviours(1, 0, 0, 0, 0, 1, 0);
+
+    pBot->GetPath()->clear();
   }
 
 } // SetBehaviours()
+
+
+void Reload::GetClosestResupply(Bot* pBot)
+{ // Sets the bots target as the vector of the cloest resupply location on
+  // the bots teams side of the map
+
+  if ((StaticMap::GetInstance()->GetResupplyLocation(2) - pBot->GetLocation()).magnitude() > (StaticMap::GetInstance()->GetResupplyLocation(3) - pBot->GetLocation()).magnitude())
+    pBot->supplyLoc = StaticMap::GetInstance()->GetResupplyLocation(3);
+  else
+    pBot->supplyLoc = StaticMap::GetInstance()->GetResupplyLocation(2);
+
+} // GetClosestResupply()
 
 
 char* Reload::GetStateName()

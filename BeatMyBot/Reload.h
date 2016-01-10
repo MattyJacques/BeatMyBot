@@ -41,6 +41,10 @@ public:
   // Checks to see if the bots behaviours needs to switch to arrive or seek
   void SetBehaviours(Bot* pBot);
 
+  // Sets the bots target as the vector of the cloest resupply location on
+  // the bots teams side of the map
+  void GetClosestResupply(Bot* pBot);
+
   // Returns the state name from debugging
   char* GetStateName();
 

@@ -93,7 +93,7 @@ void Defend::CheckDistance(Bot* pBot)
     DynamicObjects::GetInstance()->GetDominationPoint(pBot->domTarget).m_Location))
   {
     if ((pBot->GetLocation() - DynamicObjects::GetInstance()->
-      GetDominationPoint(pBot->domTarget).m_Location).magnitude() < 200)
+      GetDominationPoint(pBot->domTarget).m_Location).magnitude() < 100)
     {
       pBot->SetBehaviours(0, 1, 0, 0, 0, 1, 0);    
     }
