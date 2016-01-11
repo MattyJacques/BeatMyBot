@@ -54,7 +54,7 @@ bool Networking::ServerSetup()
   serverAddr.sin_port = htons(port);
 
   ioctlsocket(sock, FIONBIO, &nonblocking);
-  setsockopt(sock, IPPROTO_IP, TCP_NODELAY, (char*)&flag, sizeof(int));
+  //setsockopt(sock, IPPROTO_IP, TCP_NODELAY, (char*)&flag, sizeof(int));
 
   // Binds the created socket to the server address while checking for an
   // error
@@ -90,7 +90,8 @@ void Networking::Send()
   int rcvlen;
   int clientlen = sizeof(clientAddr);
 
-  if ((rcvlen = recvfrom(sock, ping, sizeof(ping), 0, (struct sockaddr*)&clientAddr, &clientlen)) != -1)
+  if ((rcvlen = recvfrom(sock, ping, sizeof(ping), 0, 
+    (struct sockaddr*)&clientAddr, &clientlen)) != -1)
   {
     memcpy(buffer, DynamicObjects::GetInstance(), sizeof(DynamicObjects));
 
@@ -116,7 +117,8 @@ DynamicObjects* Networking::Recieve()
     (sockaddr*)&serverAddr, sizeof(serverAddr)) != sizeof(ping))
     ErrorLogger::Writeln(L"SEND WRONG SIZE");
 
-  if ((rcvlen = recvfrom(sock, buffer, sizeof(DynamicObjects), 0, (sockaddr*)&clientAddr, &clientlen)) < 0)
+  if ((rcvlen = recvfrom(sock, buffer, sizeof(DynamicObjects), 0, 
+    (sockaddr*)&clientAddr, &clientlen)) < 0)
   { 
     ErrorLogger::Writeln(L"RECIEVE FAILURE");
   }
