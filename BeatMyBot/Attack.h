@@ -8,7 +8,7 @@
 #include "bot.h"  /// Definition of the bot object
 
 
-class Attack : public State
+class Attack : public State<Bot>
 {
 
 private:

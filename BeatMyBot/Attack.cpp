@@ -62,7 +62,7 @@ void Attack::Execute(Bot* pBot)
     else if (pBot->GetTargetTeam() != 1)        // If not aiming
       pBot->SetTarget(1, pBot->botTarget);
 
-    if (pBot->GetAccuracy() > 0.7)
+    if (pBot->GetAccuracy() >= 0.7)
       pBot->Shoot();
   }
   else

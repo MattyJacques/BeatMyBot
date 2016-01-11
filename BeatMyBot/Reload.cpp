@@ -49,7 +49,6 @@ void Reload::Execute(Bot* pBot)
   if (pBot->GetAmmo() == MAXAMMO)
     pBot->ChangeState(Capture::GetInstance());
 
-
   SetBehaviours(pBot);
 
   pBot->SetAcceleration(pBot->Accumulate(pBot->supplyLoc, Vector2D(0, 0),
@@ -84,7 +83,6 @@ void Reload::SetBehaviours(Bot* pBot)
     else
       pBot->SetBehaviours(1, 0, 0, 0, 0, 1, 0);
 
-    pBot->GetPath()->clear();
   }
 
 } // SetBehaviours()

@@ -8,7 +8,7 @@
 #include "bot.h"        // Definition of bot
 
 
-class Reload : public State
+class Reload : public State<Bot>
 {
 
 private:

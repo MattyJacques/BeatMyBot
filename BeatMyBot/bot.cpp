@@ -374,13 +374,13 @@ void Bot::BotDebug()
 } // BotDebug()
 
 
-void Bot::ChangeState(State* newState)
+void Bot::ChangeState(State<Bot>* newState)
 { // Uses the pointer given as a parameter to the current active state for
   // the bot
 
   // If were in a state, run exit otherwise just switch states
   if (pCurrentState)
-  pCurrentState->Exit(this);
+    pCurrentState->Exit(this);
 
   pPreviousState = pCurrentState;
   pCurrentState = newState;
@@ -612,6 +612,7 @@ int Bot::GetTeamNumber()
   return m_iOwnTeamNumber;
 
 } // GetTeamNumber()
+
 
 int Bot::GetBotNumber()
 { // Returns the bots number within the team

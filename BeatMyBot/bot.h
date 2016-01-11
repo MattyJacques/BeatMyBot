@@ -66,7 +66,7 @@ public:
 
   // Uses the pointer given as a parameter to the current active state for
   // the bot
-  void ChangeState(State* newState);
+  void ChangeState(State<Bot>* newState);
 
   // Sets the bots acceleration to the given parameter
   void SetAcceleration(Vector2D accel);
@@ -126,5 +126,6 @@ public:
   // Returns the bots number within the team
   int GetBotNumber();
 
-
+  // Returns the shoot cooldown timer for the owning bot
+  float GetCoolDown();
 };

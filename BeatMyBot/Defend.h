@@ -8,7 +8,7 @@
 #include "bot.h"
 
 
-class Defend : public State
+class Defend : public State<Bot>
 {
 
 private:

@@ -8,7 +8,7 @@
 #include "bot.h" // Definition of bot type
 
 
-class Capture : public State
+class Capture : public State<Bot>
 {
 
 private:

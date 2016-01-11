@@ -28,8 +28,8 @@ public:
   int botTarget;                 // Holds ID to a target bot
   int domTarget;                 // Holds ID of the dom target
   Vector2D supplyLoc;            // Holds location of supply point
-  State* pCurrentState;          // Holds the current state of the bot
-  State* pPreviousState;         // Holds the previous state of the bot
+  State<Bot>* pCurrentState;          // Holds the current state of the bot
+  State<Bot>* pPreviousState;         // Holds the previous state of the bot
   std::vector<Vector2D> myPath;   // Holds the current path for the bot
   
   // Constructor initialises all variables within class to null etc
