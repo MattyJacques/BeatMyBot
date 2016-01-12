@@ -23,6 +23,9 @@ protected:
 	float m_dAccuracy;				// Accuracy of the current firing solution (1==100%)
 	int m_iHealth;					// Health (up to 100)
 
+  // Made damage a memeber of class to be able to be sent over network
+  int damage;
+
 	Vector2D targetPoint;			// Used only by Chris's AI
 
   
@@ -73,6 +76,12 @@ public:
 
   // Returns the number of ammo the bot has
   int GetAmmo();
+
+  // Returns the damage that was caused from the shot
+  int GetDamage();
+
+  // Returns the firing state of the bot
+  bool GetFiring();
 
 	// This is a quick n' dirty AI for team 2.
 	// Try to make team 1 better than this.

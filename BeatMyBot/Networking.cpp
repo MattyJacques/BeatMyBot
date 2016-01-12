@@ -11,6 +11,17 @@
 // Initialise instance of the class to null
 Networking* Networking::pInstance = nullptr;
 
+bool Networking::isActive = false;
+
+
+Networking::Networking()
+{ // Initialises data to make sure it is not filled with junk
+
+  memset(&data, 0, sizeof(NetData));
+
+} // Networking()
+
+
 Networking * Networking::GetInstance()
 { // Returns a pointer to the current instance of the class, if none currently
   // exists, create on then return that pointer
@@ -26,9 +37,11 @@ Networking * Networking::GetInstance()
 } // GetInstance()
 
 
-void Networking::ServerSetup()
+bool Networking::ServerSetup()
 { // Loads WSA, creates a socket, constructs address struct and then binds the
   // socket to the server address
+
+  bool result = true;
 
   WSASetup();
 
@@ -36,7 +49,7 @@ void Networking::ServerSetup()
   if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
   {
     ErrorLogger::Writeln(L"Error: socket() - Exiting");
-    Release();
+    result = false;
   }
 
   memset(&serverAddress, 0, sizeof(serverAddress));     // 0 structure
@@ -48,8 +61,10 @@ void Networking::ServerSetup()
   if (bind(sock, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) < 0)
   {
     ErrorLogger::Writeln(L"Error: bind() - Exiting");
-    Release();
+    result = false;
   }
+
+  return result;
 
 } // ServerSetup()
 
@@ -111,6 +126,62 @@ void* Networking::ConnectToClients()
 } // ConnectToClients()
 
 
+void Networking::ConnectToServer()
+{ // Initialises the client and attempts to connect to server asking to
+  // retrieve the initial data the server would send
+
+  WSASetup();
+
+  // Create socket
+  if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+  {
+    ErrorLogger::Writeln(L"Error: socket() - Exiting");
+    Release();
+  }
+
+  memset(&serverAddress, 0, sizeof(serverAddress));     // 0 structure
+  serverAddress.sin_family = AF_INET;                   // Internet address
+  serverAddress.sin_addr.s_addr = inet_addr(IP);        // Server IP
+  serverAddress.sin_port = htons(PORT);                 // Local port
+
+  // Create the connect message and send to the server, checking for error
+  char connectStr[3] = "hi";
+  if (sendto(sock, connectStr, strlen(connectStr), 0, (struct sockaddr*) &serverAddress, sizeof(serverAddress)) != strlen(connectStr))
+  {
+    ErrorLogger::Writeln(L"Error: sendto() - ConnectToServer() - Exiting");
+    Release();
+  }
+
+  // Create variables ready for recieving initial data
+  int recvlen = 0;
+  int addrLen = sizeof(serverAddress);
+  char buffer[sizeof(InitialData)];
+  memset(&buffer, 0, sizeof(InitialData));
+
+  // Recieve the initial data
+  recvlen = recvfrom(sock, buffer, sizeof(InitialData), 0, 
+                     (struct sockaddr*) &serverAddress, &addrLen);
+
+  // Create initial data object and init to 0
+  InitialData initData;
+  memcpy(&initData, &buffer, sizeof(InitialData));
+
+  // Set the timer until the next lot of score is set
+  DynamicObjects::GetInstance()->SetScoreTimer(initData.scoreUpdateTimer);
+
+  // Set the scores for the teams, filthy way of doing it however supports any
+  // number of teams this way, will change if have time
+  for (int i = 0; i < NUMTEAMS; i++)
+    DynamicObjects::GetInstance()->m_rgTeams[i].m_iScore = initData.scores[i];
+
+  // Sets the owners of the domination points, one again hacky method but 
+  // supports as many domination points as it needs, will change if have time
+  for (int i = 0; i < NUMDOMINATIONPOINTS; i++)
+    DynamicObjects::GetInstance()->m_rgDominationPoints[i].m_OwnerTeamNumber = initData.dpStates[i];
+
+} // ConnectToServer()
+
+
 void Networking::CreateThread()
 { // Makes a new thread to check for clients
 
@@ -149,7 +220,7 @@ void Networking::Send()
   // Set shot data for bots
   for (int i = 0; i < NUMTEAMS; i++)
   {
-    for (UINT i = 0; i < NUMBOTSPERTEAM; i++)
+    for (UINT j = 0; j < NUMBOTSPERTEAM; j++)
     {
       data.teams[i].shots[j].team = (int8_t)DynamicObjects::GetInstance()->
                                        GetBot(i, j).GetTargetTeam();
@@ -170,6 +241,32 @@ void Networking::Send()
   }
 
 } // Send()
+
+
+bool Networking::Recieve()
+{ // Recieves the data from the server
+  
+  char buffer[sizeof(NetData)];
+
+  memset(&data, 0, sizeof(NetData));
+  memset(&buffer, 0, sizeof(NetData));
+
+  int addrLen = sizeof(serverAddress);
+
+  recvfrom(sock, buffer, sizeof(NetData), 0, (struct sockaddr*) &serverAddress, &addrLen);
+
+  char exitCode[5] = "exit";
+  if (strcmp(buffer, exitCode) == 0)
+  {
+    ErrorLogger::Writeln(L"Exit code recieved - Exiting");
+    return false;
+  }
+
+  memcpy(&data, &buffer, sizeof(NetData));
+
+  return true;
+
+} // Recieve()
 
 
 void Networking::Release()
@@ -203,7 +300,7 @@ void Networking::SendClientExit()
 int16_t Networking::RadsToDegrees(double radians)
 { // Converts radians to degrees
 
-  return radians * (180 / PI);
+  return (int16_t)radians * (180 / PI);
 
 } // RadsToDegrees()
 
@@ -216,7 +313,7 @@ bool Networking::WSASetup()
   if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0)
   {
     ErrorLogger::Writeln(L"WSA FAILURE");
-    return false;
+    result = false;
   }
 
   return result;

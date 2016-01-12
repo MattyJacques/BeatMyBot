@@ -78,7 +78,7 @@ private:
   // Starts windows sockets
   bool WSASetup();
 
-  // Private constructor for singleton
+  // Initialises data to make sure it is not filled with junk
   Networking();
 
   // Sends exit code to any clients, closes socket and closes windows sockets
@@ -105,7 +105,7 @@ public:
 
   // Loads WSA, creates a socket, constructs address struct and then binds the
   // socket to the server address
-  void ServerSetup();
+  bool ServerSetup();
 
   // Secondary thread loops forever until told to quit, waits for new clients,
   // if a new client is found, store the new client and send initial data
@@ -125,7 +125,7 @@ public:
   void Send();
 
   // Recieves the data from the server
-  void Recieve();
+  bool Recieve();
 
   // If called while pInstance is valid, deletes and defines as nullptr
   static void Release();

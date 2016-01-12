@@ -174,8 +174,8 @@ ErrorType Game::Update()
       {
         server = false;
         Networking::Release();
-        Networking::GetInstance()->WSASetup();
-        Networking::GetInstance()->ConnectToServer(IP);
+        //Networking::GetInstance()->WSASetup();
+        //Networking::GetInstance()->ConnectToServer(IP);
       }
       else
       {
@@ -185,7 +185,8 @@ ErrorType Game::Update()
     }
     else
     {
-      memcpy(DynamicObjects::GetInstance(), Networking::GetInstance()->Recieve(), sizeof(DynamicObjects));
+      if (Networking::GetInstance()->Recieve())
+        memcpy(DynamicObjects::GetInstance(), &Networking::GetInstance()->data, sizeof(DynamicObjects));
 
     }
 		
@@ -228,6 +229,8 @@ ErrorType Game::Update()
 		ErrorLogger::Writeln(L"Interface reports failure.");
 		// Non-critical error
 	}
+
+  Networking::GetInstance()->Send();
 
 	return answer;
 }
@@ -313,17 +316,12 @@ ErrorType Game::InitialiseScript()
 	pDynObjects->Initialise();
   Pathfinder::GetInstance()->GenerateNodes();
 
-  if (Networking::GetInstance()->WSASetup() == false)
-    ErrorLogger::Writeln(L"WSA SETUP FALSE");
 
-  IP = "172.16.1.117";
   server = true;
-
   if (!Networking::GetInstance()->ServerSetup())
-    ErrorLogger::Writeln(L"SERVER SETUP FAIL");
-
-
-
+    ErrorLogger::Writeln(L"Error: ServerSetup() Failure");
+  else
+    Networking::GetInstance()->CreateThread();
 
 	return SUCCESS;
 }

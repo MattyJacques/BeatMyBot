@@ -43,12 +43,13 @@ private:
 	~DynamicObjects();
 	DynamicObjects(const DynamicObjects & other);	//Disable
 	//Team m_rgTeams[MAXTEAMS];
-	DominationPoint m_rgDominationPoints[MAXDOMINATIONPOINTS];
+	//DominationPoint m_rgDominationPoints[MAXDOMINATIONPOINTS];
   int m_iNumPlacedDominationPoints;
 	static DynamicObjects* pInst;
 	float m_dNextScorePoint;						// Time until next points get added
 public:
   Team m_rgTeams[MAXTEAMS];
+  DominationPoint m_rgDominationPoints[MAXDOMINATIONPOINTS];
   
   static DynamicObjects* GetInstance();			// Thread-safe singleton
 
@@ -79,4 +80,10 @@ public:
 	// Adds a new domination point at the specified location
 	// (up to the maximum limit in MAXDOMINATIONPOINTS
 	void PlaceDominationPoint(Vector2D location);
+
+  // Returns the timer until next lots of score is added
+  double GetScoreTimer();
+
+  // Sets the timer for the countdown to the next lot of score
+  void SetScoreTimer(double time);
 };

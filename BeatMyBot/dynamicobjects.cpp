@@ -219,3 +219,18 @@ void DynamicObjects::PlaceDominationPoint(Vector2D location)
 		++m_iNumPlacedDominationPoints;
 	}
 }
+
+double DynamicObjects::GetScoreTimer()
+{ // Returns the timer until next lots of score is added, truncates to double
+
+  return (double)m_dNextScorePoint;
+
+} // GetScoreTimer()
+
+
+void DynamicObjects::SetScoreTimer(double time)
+{ // Sets the timer for the countdown to the next lot of score
+
+  m_dNextScorePoint = (float)time;
+
+} // SetScoreTimer()

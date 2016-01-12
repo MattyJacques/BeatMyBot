@@ -144,7 +144,7 @@ void Bot::Update(float frametime)
 						m_bFiring = false;
             m_iAmmo--;
 						m_dTimeToCoolDown = TIMEBETWEENSHOTS;
-						int damage=0;
+						damage=0;
 
 						while(damage<100 && (rand()%1000) < int(m_dAccuracy*1000))
 						{
@@ -403,6 +403,22 @@ int Bot::GetAmmo()
   return m_iAmmo;
   
 } // GetAmmo()
+
+
+int Bot::GetDamage()
+{ // Returns the damage that was caused from the shot
+
+  return damage;
+
+} // GetDamage()
+
+
+bool Bot::GetFiring()
+{
+
+  return m_bFiring;
+
+} // GetFiring()
 
 
 void Bot::ProcessAIBadly()
