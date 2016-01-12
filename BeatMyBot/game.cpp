@@ -175,7 +175,7 @@ ErrorType Game::Update()
         server = false;
         Networking::Release();
         //Networking::GetInstance()->WSASetup();
-        //Networking::GetInstance()->ConnectToServer(IP);
+        Networking::GetInstance()->ConnectToServer();
       }
       else
       {
@@ -183,12 +183,12 @@ ErrorType Game::Update()
         Networking::GetInstance()->Send();
       }
     }
-    else
-    {
-      if (Networking::GetInstance()->Recieve())
-        memcpy(DynamicObjects::GetInstance(), &Networking::GetInstance()->data, sizeof(DynamicObjects));
+    //else
+    //{
+      //if (Networking::GetInstance()->Recieve())
+        //memcpy(DynamicObjects::GetInstance(), &Networking::GetInstance()->data, sizeof(DynamicObjects));
 
-    }
+    //}
 		
 	}
 
@@ -230,7 +230,8 @@ ErrorType Game::Update()
 		// Non-critical error
 	}
 
-  Networking::GetInstance()->Send();
+  if (Networking::GetInstance()->isServer)
+   Networking::GetInstance()->Send();
 
 	return answer;
 }

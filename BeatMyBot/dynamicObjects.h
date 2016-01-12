@@ -86,4 +86,7 @@ public:
 
   // Sets the timer for the countdown to the next lot of score
   void SetScoreTimer(double time);
+
+  // Converts degrees to radians
+  float DegsToRads(int degrees);
 };
