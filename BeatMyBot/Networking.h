@@ -25,17 +25,17 @@
 #define PI 3.141592
 
 class DynamicObjects;
-//#include "dynamicObjects.h"
 
 
 class Networking
 {
 private:
   static Networking* pInstance;
-  int sock;   // ID of the socket to use
-  sockaddr_in servAddr;   // Holds address of server
-  DWORD thread;       // Thread that waits for connection
-  std::vector<sockaddr_in> clients; // Holds the clients to server
+  int sock;                            // ID of the socket to use
+  sockaddr_in serverAddress;           // Holds address of server
+  DWORD thread;                        // Thread that waits for connection
+  std::vector<sockaddr_in> clients;    // Holds the clients to server
+  WSAData wsaData;                     // Windows socket stuff
 
   // Holds the data on the bots to be passed across network
   struct BotData
@@ -73,10 +73,16 @@ private:
   void SendClientExit();
 
   // Converts radians to degrees
-  uint16_t RadsToDegrees(double radians);
+  int16_t RadsToDegrees(double radians);
+
+  // Starts windows sockets
+  bool WSASetup();
 
   // Private constructor for singleton
   Networking();
+
+  // Sends exit code to any clients, closes socket and closes windows sockets
+  void CloseConnections();
 
 public:
   NetData data; // Holds the current data for the frame
@@ -99,7 +105,11 @@ public:
 
   // Loads WSA, creates a socket, constructs address struct and then binds the
   // socket to the server address
-  void SetupServer();
+  void ServerSetup();
+
+  // Secondary thread loops forever until told to quit, waits for new clients,
+  // if a new client is found, store the new client and send initial data
+  void* ConnectToClients();
 
   // Initialises the client and attempts to connect to server asking to
   // retrieve the initial data the server would send

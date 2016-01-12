@@ -5,154 +5,231 @@
 #include <winsock2.h>       // Windows networking
 #include "Networking.h"
 #include "ErrorLogger.h"    // WriteLn & error reporting
+#include "dynamicObjects.h" // Bot Data
+
 
 // Initialise instance of the class to null
 Networking* Networking::pInstance = nullptr;
 
-Networking::Networking()
-{
-  port = 65534;
-  sock = 0;
-  nonblocking = 1;
-  flag = 1;
-} // Networking()
+Networking * Networking::GetInstance()
+{ // Returns a pointer to the current instance of the class, if none currently
+  // exists, create on then return that pointer
 
-Networking* Networking::GetInstance()
-{
   if (!pInstance)
+  {
     pInstance = new Networking;
+    isActive = true;
+  }
 
   return pInstance;
-}
+
+} // GetInstance()
 
 
-bool Networking::WSASetup()
-{
-  if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0)
-  {
-    ErrorLogger::Writeln(L"WSA FAILURE");
-    return false;
-  }
+void Networking::ServerSetup()
+{ // Loads WSA, creates a socket, constructs address struct and then binds the
+  // socket to the server address
 
-  return true;
-}
+  WSASetup();
 
-bool Networking::ServerSetup()
-{ // Creates a socket and initialises the server address to appropriate
-  // values for networking communications. Binds the socket to the address
-  // while outputting appropriate error messages if occured
-
-  // Create a socket and check for creation error
+  // Create UDP socket
   if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
-    ErrorLogger::Writeln(L"NetworkSetup() Failure in socket() - server");
-
-  // Inits serverAddr to 0, then defines each member of the struct to the
-  // appropriate values for network communication
-  memset(&serverAddr, 0, sizeof(serverAddr));
-  serverAddr.sin_family = AF_INET;
-  serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-  serverAddr.sin_port = htons(port);
-
-  ioctlsocket(sock, FIONBIO, &nonblocking);
-  //setsockopt(sock, IPPROTO_IP, TCP_NODELAY, (char*)&flag, sizeof(int));
-
-  // Binds the created socket to the server address while checking for an
-  // error
-  if (bind(sock, (sockaddr*)&serverAddr, sizeof(serverAddr)) < 0)
   {
-    ErrorLogger::Writeln(L"NetworkSetup() Failure in bind()");
-    return false;
+    ErrorLogger::Writeln(L"Error: socket() - Exiting");
+    Release();
   }
-  return true;
+
+  memset(&serverAddress, 0, sizeof(serverAddress));     // 0 structure
+  serverAddress.sin_family = AF_INET;                   // Internet address
+  serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);    // Any interface
+  serverAddress.sin_port = htons(PORT);                 // Local port
+
+  // Bind the socket to the local socket, checking for error
+  if (bind(sock, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) < 0)
+  {
+    ErrorLogger::Writeln(L"Error: bind() - Exiting");
+    Release();
+  }
 
 } // ServerSetup()
 
-bool Networking::ConnectToServer(char* ipAddr)
-{
-  if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+
+void* Networking::ConnectToClients()
+{ // Secondary thread loops forever until told to quit, waits for new clients,
+  // if a new client is found, store the new client and send initial data
+
+  while (!false)
   {
-    ErrorLogger::Writeln(L"NetworkSetup() Failure in socket() - client");
-    return false;
+    // Create the address for the client and get the length of the address, init
+    // to 0
+    sockaddr_in clientAddress;
+    memset(&clientAddress, 0, sizeof(clientAddress));
+    int clientLength = sizeof(clientAddress);
+
+    // Create buff for the hello message from client, init to 0
+    char buffer[3];
+    memset(&buffer, 0, sizeof(buffer));
+
+    // Recieve the message and place into buffer
+    recvfrom(sock, buffer, sizeof(buffer), 0,
+             (struct sockaddr*) &clientAddress, &clientLength);
+
+    // Create the char array to check if the client is actually valid
+    char check[3] = "hi";
+
+    if (strcmp(buffer, check) == 0)
+    { // Client send correct message, add to the client list
+
+      ErrorLogger::Writeln(L"Found client");
+      StoreClient(clientAddress);
+
+      // Set the score timer of the initial data
+      InitialData initData;
+      initData.scoreUpdateTimer = DynamicObjects::GetInstance()->GetScoreTimer();
+
+      // Set the states of the domination points 
+      for (int i = 0; i < NUMDOMINATIONPOINTS; i++)
+        initData.dpStates[i] = DynamicObjects::GetInstance()->GetDominationPoint(i).m_OwnerTeamNumber;
+
+      // Set scores for the teams
+      for (int i = 0; i < NUMTEAMS; i++)
+        initData.scores[i] = DynamicObjects::GetInstance()->GetScore(i);
+
+      // Send the initial data to the new client
+      if (sendto(sock, (char*) &initData, sizeof(InitialData), 0, (struct sockaddr*) &clientAddress, sizeof(clientAddress)))
+       ErrorLogger::Writeln(L"Initial Data Sento() Failed");
+    }
+
+    if (!isActive)
+    { // If the server is not active, close the thread
+      ErrorLogger::Writeln(L"Server not active, ending thread");
+      _endthread();
+    }
+
   }
 
-  memset(&serverAddr, 0, sizeof(serverAddr));
-  serverAddr.sin_family = AF_INET;
-  serverAddr.sin_addr.s_addr = inet_addr(ipAddr);
-  serverAddr.sin_port = htons(port);
+} // ConnectToClients()
 
-}
+
+void Networking::CreateThread()
+{ // Makes a new thread to check for clients
+
+  _beginthreadex(NULL, 0, (unsigned int(__stdcall *)(void*))ConnectToClients(), 0, 0, (unsigned int*)&thread);
+
+} // CreateThread()
+
+
+void Networking::StoreClient(sockaddr_in address)
+{  // Stores the client in the vector of clients
+
+  clients.push_back(address);
+
+} // StoreClient()
+
 
 void Networking::Send()
-{ // Sends the contents of DynamicObjects over network using a buffer
+{ // Sends data to all clients within the vector
 
-  char ping[1];
-
-  int rcvlen;
-  int clientlen = sizeof(clientAddr);
-
-  if ((rcvlen = recvfrom(sock, ping, sizeof(ping), 0, 
-    (struct sockaddr*)&clientAddr, &clientlen)) != -1)
+  // Set location data for bots
+  for (int i = 0; i < NUMTEAMS; i++)
   {
-    memcpy(buffer, DynamicObjects::GetInstance(), sizeof(DynamicObjects));
+    for (int j = 0; j < NUMBOTSPERTEAM; j++)
+    {
+      data.teams[i].bots[j].xValue = (int16_t)DynamicObjects::GetInstance()->
+                                        GetBot(i, j).GetLocation().XValue;
+      data.teams[i].bots[j].yValue = (int16_t)DynamicObjects::GetInstance()->
+                                        GetBot(i, j).GetLocation().YValue;
+      data.teams[i].bots[j].dir = RadsToDegrees(DynamicObjects::GetInstance()->
+                                        GetBot(i, j).GetDirection());
+      data.teams[i].bots[j].isAlive = DynamicObjects::GetInstance()->
+                                        GetBot(i, j).IsAlive();
+    }
+  }
 
-    // Sends the data using the socket and address given as a parameter
-    if (sendto(sock, buffer, sizeof(DynamicObjects), 0,
-      (sockaddr*)&clientAddr, sizeof(clientAddr)) != sizeof(DynamicObjects))
-      ErrorLogger::Writeln(L"SEND WRONG SIZE");
-    
+  // Set shot data for bots
+  for (int i = 0; i < NUMTEAMS; i++)
+  {
+    for (UINT i = 0; i < NUMBOTSPERTEAM; i++)
+    {
+      data.teams[i].shots[j].team = (int8_t)DynamicObjects::GetInstance()->
+                                       GetBot(i, j).GetTargetTeam();
+      data.teams[i].shots[j].bot = (int8_t)DynamicObjects::GetInstance()->
+                                       GetBot(i, j).GetTargetBot();
+      data.teams[i].shots[j].damage = (int8_t)DynamicObjects::GetInstance()->
+                                       GetBot(i, j).GetDamage();
+      data.teams[i].shots[j].firing = DynamicObjects::GetInstance()->
+                                       GetBot(i, j).GetFiring();
+    }
+  }
 
+  // Send data to all clients
+  for (int i = 0; i < clients.size(); i++)
+  {
+    if (sendto(sock, (char*)&data, sizeof(NetData), 0, (struct sockaddr*) &clients[i], sizeof(clients[i])))
+      ErrorLogger::Writeln(L"Error: sendto() - Send() - Wrong size - Exiting");
   }
 
 } // Send()
-
-DynamicObjects* Networking::Recieve()
-{ // Recieves data and places directly within DynamicObjects
-
-  char ping[1] = { '.' };
-
-  int rcvlen;
-  int clientlen = sizeof(clientAddr);
-
-  if (sendto(sock, ping, sizeof(ping), 0,
-    (sockaddr*)&serverAddr, sizeof(serverAddr)) != sizeof(ping))
-    ErrorLogger::Writeln(L"SEND WRONG SIZE");
-
-  if ((rcvlen = recvfrom(sock, buffer, sizeof(DynamicObjects), 0, 
-    (sockaddr*)&clientAddr, &clientlen)) < 0)
-  { 
-    ErrorLogger::Writeln(L"RECIEVE FAILURE");
-  }
-
-  if (rcvlen == sizeof(DynamicObjects))
-    return (DynamicObjects*)buffer;
-  else
-  {
-    ErrorLogger::Writeln(L"RECIEVE WRONG SIZE");
-    return nullptr;
-  }
-
-} // Recieve()
-
 
 
 void Networking::Release()
 { // If called while pInstance is valid, deletes and defines as nullptr
 
-  pInstance->CloseConnection();
-
   if (pInstance)
   {
+    pInstance->CloseConnections();
     delete pInstance;
     pInstance = nullptr;
   }
 
 } // Release()
 
-void Networking::CloseConnection()
-{
-  if (sock)
+
+void Networking::SendClientExit()
+{ // When server is closed, tells clients to exit so they do not crash while
+  // waiting to recieve
+
+  char exitCode[5] = "exit";
+
+  for (int i = 0; i < clients.size(); i++)
   {
-    closesocket(sock);
-    WSACleanup();
+    if (sendto(sock, exitCode, sizeof(exitCode), 0, (struct sockaddr*) &clients[i], sizeof(clients[i])))
+      ErrorLogger::Writeln(L"Error: sendto() - SendClientExit() - Wrong size - Exiting");
   }
-}
+
+} // SendClientExit()
+
+
+int16_t Networking::RadsToDegrees(double radians)
+{ // Converts radians to degrees
+
+  return radians * (180 / PI);
+
+} // RadsToDegrees()
+
+
+bool Networking::WSASetup()
+{ // Starts windows sockets
+
+  bool result = true;
+
+  if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0)
+  {
+    ErrorLogger::Writeln(L"WSA FAILURE");
+    return false;
+  }
+
+  return result;
+
+} // WSASetup()
+
+
+void Networking::CloseConnections()
+{ // Sends exit code to any clients, closes socket and closes windows sockets
+
+  SendClientExit();
+  isActive = false;
+  closesocket(sock);
+  WSACleanup();
+
+} // CloseConnections()
