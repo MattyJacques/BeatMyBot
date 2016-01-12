@@ -421,6 +421,45 @@ bool Bot::GetFiring()
 } // GetFiring()
 
 
+void Bot::SetPosition(double x, double y)
+{ // Sets the position of the bot to given parameters
+
+  m_Position.XValue = x;
+  m_Position.YValue = y;
+
+} // SetPosition()
+
+
+void Bot::SetDir(double dir)
+{ // Sets the bots direction using radians
+
+  m_dDirection = dir;
+
+} // SetDir()
+
+
+void Bot::SetIsAlive(bool state)
+{ // Sets if the bot is alive or not
+
+  if (state == true)
+    m_dTimeToRespawn = 0.0;
+  else
+    m_dTimeToRespawn = 1.0;
+
+} // SetIsAlive()
+
+
+void Bot::SetShotData(int team, int bot, int dmg, bool firing)
+{ // Sets the current shot data for the bot
+
+  m_iAimingAtTeam = team;
+  m_iAimingAtBot = bot;
+  damage = dmg;
+  m_bFiring = firing;
+
+} // SetShotData()
+
+
 void Bot::ProcessAIBadly()
 {
 	// This is all placeholder code.

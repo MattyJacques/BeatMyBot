@@ -18,6 +18,7 @@ Networking::Networking()
 { // Initialises data to make sure it is not filled with junk
 
   memset(&data, 0, sizeof(NetData));
+  isServer = true;
 
 } // Networking()
 
@@ -245,7 +246,7 @@ void Networking::Send()
 
 bool Networking::Recieve()
 { // Recieves the data from the server
-  
+
   char buffer[sizeof(NetData)];
 
   memset(&data, 0, sizeof(NetData));

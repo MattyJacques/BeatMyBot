@@ -1,6 +1,7 @@
 #include "dynamicobjects.h"
 #include "renderer.h"
 #include "errorlogger.h"
+#include "Networking.h"
 #define NULL 0
 
 DynamicObjects::DynamicObjects()
@@ -64,6 +65,40 @@ void DynamicObjects::Release()		// Static
 
 ErrorType DynamicObjects::Update(float frametime)
 {
+
+  if (!Networking::GetInstance()->isServer)
+  {
+    Networking* pNetwork = Networking::GetInstance();
+
+    if (!Networking::GetInstance()->Recieve())
+    {
+      for (int i = 0; i < NUMTEAMS; i++)
+      {
+        for (int j = 0; j < NUMBOTSPERTEAM; j++)
+        {
+          m_rgTeams[i].m_rgBots[j].SetPosition(pNetwork->data.teams[i].bots[j].
+            xValue, pNetwork->data.teams[i].bots[j].yValue);
+          m_rgTeams[i].m_rgBots[j].SetDir(DegsToRads(pNetwork->data.teams[i].
+            bots[j].dir));
+          m_rgTeams[i].m_rgBots[j].SetIsAlive(pNetwork->data.teams[i].bots[j].isAlive);
+        }
+      }
+
+      for (unsigned j = 0; j < NUMTEAMS; j++)
+      {
+        for (unsigned i = 0; i < NUMBOTSPERTEAM; i++)
+        {
+          m_rgTeams[i].m_rgBots[i].SetShotData(pNetwork->data.teams[i].shots[j].team,
+            pNetwork->data.teams[i].shots[j].bot,
+            pNetwork->data.teams[i].shots[j].damage,
+            pNetwork->data.teams[i].shots[j].firing);
+        }
+      }
+    } // If recieved
+
+  } // If not server
+  
+
 	// Update all bots
 	for(int i=0;i<NUMTEAMS;i++)
 	{
@@ -234,3 +269,5 @@ void DynamicObjects::SetScoreTimer(double time)
   m_dNextScorePoint = (float)time;
 
 } // SetScoreTimer()
+
+

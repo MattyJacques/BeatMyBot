@@ -83,6 +83,18 @@ public:
   // Returns the firing state of the bot
   bool GetFiring();
 
+  // Sets the position of the bot to given parameters
+  void SetPosition(double x, double y);
+
+  // Sets the bots direction using radians
+  void SetDir(double radians);
+
+  // Sets if the bot is alive or not
+  void SetIsAlive(bool state);
+
+  // Sets the current shot data for the bot
+  void SetShotData(int team, int bot, int dmg, bool firing);
+
 	// This is a quick n' dirty AI for team 2.
 	// Try to make team 1 better than this.
 	// Will be called once each frame from Update

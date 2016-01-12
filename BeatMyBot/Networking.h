@@ -86,6 +86,7 @@ private:
 
 public:
   NetData data; // Holds the current data for the frame
+  bool isServer;  // Holds if this app is a server
 
   // Holds the initial data for the server to send to the client, this is only
   // done once to save sending scores and captures over.
