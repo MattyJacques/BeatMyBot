@@ -6,6 +6,7 @@
 #include "Networking.h"
 #include "ErrorLogger.h"    // WriteLn & error reporting
 #include "dynamicObjects.h" // Bot Data
+#include "game.h"
 
 
 // Initialise instance of the class to null
@@ -20,6 +21,7 @@ Networking::Networking()
   memset(&data, 0, sizeof(NetData));
   isServer = true;
   nonblocking = 1;
+  dataSent = 0;
 
 } // Networking()
 
@@ -124,7 +126,7 @@ void Networking::ConnectToClients()
 } // ConnectToClients()
 
 
-void Networking::ConnectToServer()
+bool Networking::ConnectToServer()
 { // Initialises the client and attempts to connect to server asking to
   // retrieve the initial data the server would send
 
@@ -134,7 +136,8 @@ void Networking::ConnectToServer()
   if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
   {
     ErrorLogger::Writeln(L"Error: socket() - Exiting");
-    Release();
+    isServer = true;
+    return false;
   }
 
   memset(&serverAddress, 0, sizeof(serverAddress));     // 0 structure
@@ -149,7 +152,8 @@ void Networking::ConnectToServer()
   if (sendto(sock, connectStr, strlen(connectStr), 0, (struct sockaddr*) &serverAddress, sizeof(serverAddress)) != strlen(connectStr))
   {
     ErrorLogger::Writeln(L"Error: sendto() - ConnectToServer() - Exiting");
-    Release();
+    isServer = true;
+    return false;
   }
 
   // Create variables ready for recieving initial data
@@ -164,22 +168,31 @@ void Networking::ConnectToServer()
 
   // Create initial data object and init to 0
   InitialData initData;
-  memcpy(&initData, &buffer, sizeof(InitialData));
+  if (recvlen != -1)
+  {
+    memcpy(&initData, &buffer, sizeof(InitialData));
 
-  // Set the timer until the next lot of score is set
-  DynamicObjects::GetInstance()->SetScoreTimer(initData.scoreUpdateTimer);
+    // Set the timer until the next lot of score is set
+    DynamicObjects::GetInstance()->SetScoreTimer(initData.scoreUpdateTimer);
 
-  // Set the scores for the teams, filthy way of doing it however supports any
-  // number of teams this way, will change if have time
-  for (int i = 0; i < NUMTEAMS; i++)
-    DynamicObjects::GetInstance()->m_rgTeams[i].m_iScore = initData.scores[i];
+    // Set the scores for the teams, filthy way of doing it however supports any
+    // number of teams this way, will change if have time
+    for (int i = 0; i < NUMTEAMS; i++)
+      DynamicObjects::GetInstance()->m_rgTeams[i].m_iScore = initData.scores[i];
 
-  // Sets the owners of the domination points, one again hacky method but 
-  // supports as many domination points as it needs, will change if have time
-  for (int i = 0; i < NUMDOMINATIONPOINTS; i++)
-    DynamicObjects::GetInstance()->m_rgDominationPoints[i].m_OwnerTeamNumber = initData.dpStates[i];
+    // Sets the owners of the domination points, one again hacky method but 
+    // supports as many domination points as it needs, will change if have time
+    for (int i = 0; i < NUMDOMINATIONPOINTS; i++)
+      DynamicObjects::GetInstance()->m_rgDominationPoints[i].m_OwnerTeamNumber = initData.dpStates[i];
 
-  ioctlsocket(sock, FIONBIO, &nonblocking);
+    ioctlsocket(sock, FIONBIO, &nonblocking);
+  }
+  else
+  {
+    return false;
+  }
+
+  return true;
 } // ConnectToServer()
 
 
@@ -268,6 +281,24 @@ bool Networking::Recieve()
   }
 
   memcpy(&data, &buffer, sizeof(NetData));
+
+  
+  /*ErrorLogger::Write(sizeof(DynamicObjects));
+  ErrorLogger::Writeln(L": Size of dynamic objects");
+  ErrorLogger::Write(sizeof(NetData));
+  ErrorLogger::Writeln(L": Size of NetData");*/
+
+  dataSent += sizeof(NetData);
+
+  static double count = 0;
+  debugTimer.mark();
+  count += debugTimer.m_dFrameTime;
+  if (count >= 1)
+  {
+    ErrorLogger::Writeln(dataSent);
+    count = 0;
+    dataSent = 0;
+  }
 
   return true;
 

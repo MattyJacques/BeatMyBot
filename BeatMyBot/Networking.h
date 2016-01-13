@@ -25,7 +25,7 @@
 #define PI 3.141592
 
 class DynamicObjects;
-
+#include "game.h"
 
 class Networking
 {
@@ -36,6 +36,8 @@ private:
   DWORD thread;                        // Thread that waits for connection
   std::vector<sockaddr_in> clients;    // Holds the clients to server
   WSAData wsaData;                     // Windows socket stuff
+  double dataSent;                     // TESTING how much data has been sent over network
+  GameTimer debugTimer;
 
   // Holds the data on the bots to be passed across network
   struct BotData
@@ -51,7 +53,7 @@ private:
   // Holds the data on shots by the bots such as aiming and damage
   struct ShotData
   {
-    int8_t team;        // Holds which team is shooting
+    int8_t team;        // Holds which team is being aimed at
     int8_t bot;         // Which bot is shooting
     int8_t damage;     // How much damage it caused, can't be negative
     bool firing;        // For m_bfiring
@@ -117,7 +119,7 @@ public:
 
   // Initialises the client and attempts to connect to server asking to
   // retrieve the initial data the server would send
-  void ConnectToServer();
+  bool ConnectToServer();
 
   // Makes a new thread to check for clients
   void CreateThread();

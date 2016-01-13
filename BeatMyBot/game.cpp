@@ -175,7 +175,11 @@ ErrorType Game::Update()
       {
         Networking::Release();
         Networking::GetInstance()->isServer = false;
-        Networking::GetInstance()->ConnectToServer();
+        if (!Networking::GetInstance()->ConnectToServer())
+        {
+          Networking::GetInstance()->Release();
+          Networking::GetInstance()->ServerSetup();
+        }
       }
       else
       {
@@ -185,12 +189,6 @@ ErrorType Game::Update()
       }
     }
     DynamicObjects::GetInstance()->Update(m_timer.m_fFrameTime);
-    //else
-    //{
-      //if (Networking::GetInstance()->Recieve())
-        //memcpy(DynamicObjects::GetInstance(), &Networking::GetInstance()->data, sizeof(DynamicObjects));
-
-    //}
 		
 	}
 
