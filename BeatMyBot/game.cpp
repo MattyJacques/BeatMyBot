@@ -166,7 +166,7 @@ ErrorType Game::Update()
 	if(m_State == RUNNING)
 	// Update Dynamic objects
 	{
-    DynamicObjects::GetInstance()->Update(m_timer.m_fFrameTime);
+    //DynamicObjects::GetInstance()->Update(m_timer.m_fFrameTime);
     if (Networking::GetInstance()->isServer)
     {
       MyInputs* pInput = MyInputs::GetInstance();
@@ -184,6 +184,7 @@ ErrorType Game::Update()
         Networking::GetInstance()->Send();
       }
     }
+    DynamicObjects::GetInstance()->Update(m_timer.m_fFrameTime);
     //else
     //{
       //if (Networking::GetInstance()->Recieve())

@@ -211,8 +211,8 @@ void Networking::Send()
                                         GetBot(i, j).GetLocation().XValue;
       data.teams[i].bots[j].yPos = (int16_t)DynamicObjects::GetInstance()->
                                         GetBot(i, j).GetLocation().YValue;
-      //data.teams[i].bots[j].dir = RadsToDegrees(DynamicObjects::GetInstance()->
-      //                                GetBot(i, j).GetDirection());
+      data.teams[i].bots[j].dir = RadsToDegrees(DynamicObjects::GetInstance()->
+                                        GetBot(i, j).GetDirection());
       data.teams[i].bots[j].xVel = (int16_t)DynamicObjects::GetInstance()->
                                         GetBot(i, j).GetVelocity().XValue;
       data.teams[i].bots[j].xVel = (int16_t)DynamicObjects::GetInstance()->
