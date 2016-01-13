@@ -82,6 +82,12 @@ private:
   // Starts windows sockets
   bool WSASetup();
 
+  // Compress the data using zlib
+  void Compress();
+
+  // Decompress data using zlib
+  void Decompress(char* buffer);
+
   // Initialises data to make sure it is not filled with junk
   Networking();
 
@@ -92,6 +98,7 @@ public:
   NetData data; // Holds the current data for the frame
   bool isServer;  // Holds if this app is a server
   u_long nonblocking; // holds non blocking flag
+  char comData[sizeof(NetData)];
 
   // Holds the initial data for the server to send to the client, this is only
   // done once to save sending scores and captures over.

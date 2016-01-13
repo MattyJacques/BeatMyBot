@@ -6,8 +6,11 @@
 #include "Networking.h"
 #include "ErrorLogger.h"    // WriteLn & error reporting
 #include "dynamicObjects.h" // Bot Data
-#include "game.h"
+#include "game.h"           // GameTimer
+#include <string>           // use of strings for debugging
+#include "zlib.h"           // Include zlib
 
+#pragma comment(lib,"zdll.lib") // Include zlib for compression
 
 // Initialise instance of the class to null
 Networking* Networking::pInstance = nullptr;
@@ -79,49 +82,45 @@ void Networking::ConnectToClients()
 { // Secondary thread loops forever until told to quit, waits for new clients,
   // if a new client is found, store the new client and send initial data
 
-  //while (!false)
-  //{
-    // Create the address for the client and get the length of the address, init
-    // to 0
-    sockaddr_in clientAddress;
-    memset(&clientAddress, 0, sizeof(clientAddress));
-    int clientLength = sizeof(clientAddress);
+  // Create the address for the client and get the length of the address, init
+  // to 0
+  sockaddr_in clientAddress;
+  memset(&clientAddress, 0, sizeof(clientAddress));
+  int clientLength = sizeof(clientAddress);
 
-    // Create buff for the hello message from client, init to 0
-    char buffer[3];
-    memset(&buffer, 0, sizeof(buffer));
+  // Create buff for the hello message from client, init to 0
+  char buffer[3];
+  memset(&buffer, 0, sizeof(buffer));
 
-    // Recieve the message and place into buffer
-    recvfrom(sock, buffer, sizeof(buffer), 0,
-      (struct sockaddr*) &clientAddress, &clientLength);
+  // Recieve the message and place into buffer
+  recvfrom(sock, buffer, sizeof(buffer), 0,
+    (struct sockaddr*) &clientAddress, &clientLength);
 
-    // Create the char array to check if the client is actually valid
-    char check[] = "hi";
+  // Create the char array to check if the client is actually valid
+  char check[] = "hi";
 
-    if (strcmp(buffer, check) == 0)
-    { // Client send correct message, add to the client list
+  if (strcmp(buffer, check) == 0)
+  { // Client send correct message, add to the client list
 
-      ErrorLogger::Writeln(L"Found client");
-      StoreClient(clientAddress);
+    ErrorLogger::Writeln(L"Found client");
+    StoreClient(clientAddress);
 
       // Set the score timer of the initial data
-      InitialData initData;
-      initData.scoreUpdateTimer = DynamicObjects::GetInstance()->GetScoreTimer();
+    InitialData initData;
+    initData.scoreUpdateTimer = DynamicObjects::GetInstance()->GetScoreTimer();
 
-      // Set the states of the domination points 
-      for (int i = 0; i < NUMDOMINATIONPOINTS; i++)
-        initData.dpStates[i] = DynamicObjects::GetInstance()->GetDominationPoint(i).m_OwnerTeamNumber;
+    // Set the states of the domination points 
+    for (int i = 0; i < NUMDOMINATIONPOINTS; i++)
+      initData.dpStates[i] = DynamicObjects::GetInstance()->GetDominationPoint(i).m_OwnerTeamNumber;
 
-      // Set scores for the teams
-      for (int i = 0; i < NUMTEAMS; i++)
-        initData.scores[i] = DynamicObjects::GetInstance()->GetScore(i);
+    // Set scores for the teams
+    for (int i = 0; i < NUMTEAMS; i++)
+      initData.scores[i] = DynamicObjects::GetInstance()->GetScore(i);
+    // Send the initial data to the new client
+    if (sendto(sock, (char*)&initData, sizeof(InitialData), 0, (struct sockaddr*) &clientAddress, sizeof(clientAddress)))
+      ErrorLogger::Writeln(L"Initial Data Sento() Failed");
+  }
 
-      // Send the initial data to the new client
-      if (sendto(sock, (char*)&initData, sizeof(InitialData), 0, (struct sockaddr*) &clientAddress, sizeof(clientAddress)))
-        ErrorLogger::Writeln(L"Initial Data Sento() Failed");
-    }
-
-  //}
 
 } // ConnectToClients()
 
@@ -288,17 +287,6 @@ bool Networking::Recieve()
   ErrorLogger::Write(sizeof(NetData));
   ErrorLogger::Writeln(L": Size of NetData");*/
 
-  dataSent += sizeof(DynamicObjects);
-
-  static double count = 0;
-  debugTimer.mark();
-  count += debugTimer.m_dFrameTime;
-  if (count >= 1)
-  {
-    ErrorLogger::Writeln(dataSent);
-    count = 0;
-    dataSent = 0;
-  }
 
   return true;
 
@@ -355,6 +343,50 @@ bool Networking::WSASetup()
   return result;
 
 } // WSASetup()
+
+
+void Networking::Compress()
+{ // Compress the data using zlib
+
+  // Create deflate stream
+  z_stream defstream;
+
+  defstream.zalloc = Z_NULL;
+  defstream.zfree = Z_NULL;
+  defstream.opaque = Z_NULL;
+  defstream.avail_in = (uInt)sizeof(NetData) + 1; // size of input, string + terminator
+  defstream.next_in = (Bytef *)&data;             // input char array
+  defstream.avail_out = (uInt)sizeof(NetData);    // size of output
+  defstream.next_out = (Bytef *)comData;          // output char array
+
+  deflateInit(&defstream, Z_DEFAULT_COMPRESSION);
+  deflate(&defstream, Z_FINISH);
+  deflateEnd(&defstream);
+
+  printf("Deflated size is: %lu\n", (char*)defstream.next_out - comData);
+
+} // Compress()
+
+
+void Networking::Decompress(char* buffer)
+{ // Decompress data using zlib
+
+  z_stream infstream;
+  infstream.zalloc = Z_NULL;
+  infstream.zfree = Z_NULL;
+  infstream.opaque = Z_NULL;
+  infstream.avail_in = (uInt)sizeof(NetData); // size of input
+  infstream.next_in = (Bytef *)buffer; // input char array
+  infstream.avail_out = (uInt)sizeof(NetData); // size of output
+  infstream.next_out = (Bytef *)comData; // output char array
+
+  inflateInit(&infstream);
+  inflate(&infstream, Z_NO_FLUSH);
+  inflateEnd(&infstream);
+
+  printf("Inflate:\n%lu\n%s\n", strlen((char*)&data), &data);
+
+} // Decompress()
 
 
 void Networking::CloseConnections()
