@@ -95,6 +95,9 @@ public:
   // Sets the current shot data for the bot
   void SetShotData(int team, int bot, int dmg, bool firing);
 
+  // Sets the bots velocity with the given parameters
+  void SetVelocity(float x, float y);
+
 	// This is a quick n' dirty AI for team 2.
 	// Try to make team 1 better than this.
 	// Will be called once each frame from Update

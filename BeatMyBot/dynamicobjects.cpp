@@ -77,9 +77,11 @@ ErrorType DynamicObjects::Update(float frametime)
         for (int j = 0; j < NUMBOTSPERTEAM; j++)
         {
           m_rgTeams[i].m_rgBots[j].SetPosition(pNetwork->data.teams[i].bots[j].
-            xValue, pNetwork->data.teams[i].bots[j].yValue);
+            xPos, pNetwork->data.teams[i].bots[j].yPos);
           //m_rgTeams[i].m_rgBots[j].SetDir(DegsToRads((int)pNetwork->data.teams[i].
-          //  bots[j].dir));
+            //bots[j].dir));
+          m_rgTeams[i].m_rgBots[j].SetVelocity(pNetwork->data.teams[i].bots[j].
+            xVel, pNetwork->data.teams[i].bots[j].yVel);
           m_rgTeams[i].m_rgBots[j].SetIsAlive(pNetwork->data.teams[i].bots[j].isAlive);
         }
       }

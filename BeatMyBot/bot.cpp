@@ -460,6 +460,15 @@ void Bot::SetShotData(int team, int bot, int dmg, bool firing)
 } // SetShotData()
 
 
+void Bot::SetVelocity(float x, float y)
+{ // Sets the bots velocity with the given parameters
+
+  m_Velocity.XValue = x;
+  m_Velocity.YValue = y;
+
+} // SetVelocity()
+
+
 void Bot::ProcessAIBadly()
 {
 	// This is all placeholder code.
