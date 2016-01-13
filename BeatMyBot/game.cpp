@@ -180,6 +180,7 @@ ErrorType Game::Update()
       else
       {
         DynamicObjects::GetInstance()->Update(m_timer.m_fFrameTime);
+        Networking::GetInstance()->ConnectToClients();
         Networking::GetInstance()->Send();
       }
     }
@@ -195,7 +196,7 @@ ErrorType Game::Update()
 	// Render
 	if(pTheRenderer->GetIsValid()==false)
 	{
-		m_State = MINIMISED;			// Or some other reason why invalid
+		//m_State = MINIMISED;			// Or some other reason why invalid
 	}
 	else
 	{
@@ -246,9 +247,7 @@ ErrorType Game::End()
   Defend::Release();
   Reload::Release();
   Pathfinder::Release();
-
-  if (server)
-    DynamicObjects::Release();
+  DynamicObjects::Release();
 
 	return SUCCESS;
 }

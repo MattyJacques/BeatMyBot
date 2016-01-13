@@ -19,6 +19,7 @@ Networking::Networking()
 
   memset(&data, 0, sizeof(NetData));
   isServer = true;
+  nonblocking = 1;
 
 } // Networking()
 
@@ -58,6 +59,8 @@ bool Networking::ServerSetup()
   serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);    // Any interface
   serverAddress.sin_port = htons(PORT);                 // Local port
 
+  ioctlsocket(sock, FIONBIO, &nonblocking);
+
   // Bind the socket to the local socket, checking for error
   if (bind(sock, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) < 0)
   {
@@ -70,12 +73,12 @@ bool Networking::ServerSetup()
 } // ServerSetup()
 
 
-void* Networking::ConnectToClients()
+void Networking::ConnectToClients()
 { // Secondary thread loops forever until told to quit, waits for new clients,
   // if a new client is found, store the new client and send initial data
 
-  while (!false)
-  {
+  //while (!false)
+  //{
     // Create the address for the client and get the length of the address, init
     // to 0
     sockaddr_in clientAddress;
@@ -88,7 +91,7 @@ void* Networking::ConnectToClients()
 
     // Recieve the message and place into buffer
     recvfrom(sock, buffer, sizeof(buffer), 0,
-             (struct sockaddr*) &clientAddress, &clientLength);
+      (struct sockaddr*) &clientAddress, &clientLength);
 
     // Create the char array to check if the client is actually valid
     char check[3] = "hi";
@@ -112,17 +115,11 @@ void* Networking::ConnectToClients()
         initData.scores[i] = DynamicObjects::GetInstance()->GetScore(i);
 
       // Send the initial data to the new client
-      if (sendto(sock, (char*) &initData, sizeof(InitialData), 0, (struct sockaddr*) &clientAddress, sizeof(clientAddress)))
-       ErrorLogger::Writeln(L"Initial Data Sento() Failed");
+      if (sendto(sock, (char*)&initData, sizeof(InitialData), 0, (struct sockaddr*) &clientAddress, sizeof(clientAddress)))
+        ErrorLogger::Writeln(L"Initial Data Sento() Failed");
     }
 
-    if (!isActive)
-    { // If the server is not active, close the thread
-      ErrorLogger::Writeln(L"Server not active, ending thread");
-      _endthread();
-    }
-
-  }
+  //}
 
 } // ConnectToClients()
 
@@ -144,6 +141,8 @@ void Networking::ConnectToServer()
   serverAddress.sin_family = AF_INET;                   // Internet address
   serverAddress.sin_addr.s_addr = inet_addr(IP);        // Server IP
   serverAddress.sin_port = htons(PORT);                 // Local port
+
+  ioctlsocket(sock, FIONBIO, &nonblocking);
 
   // Create the connect message and send to the server, checking for error
   char connectStr[3] = "hi";
@@ -186,7 +185,7 @@ void Networking::ConnectToServer()
 void Networking::CreateThread()
 { // Makes a new thread to check for clients
 
-  _beginthreadex(NULL, 0, (unsigned int(__stdcall *)(void*))ConnectToClients(), 0, 0, (unsigned int*)&thread);
+  //_beginthreadex(NULL, 0, (unsigned int(__stdcall *)(void*))ConnectToClients(), 0, 0, (unsigned int*)&thread);
 
 } // CreateThread()
 

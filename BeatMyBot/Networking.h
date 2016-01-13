@@ -87,6 +87,7 @@ private:
 public:
   NetData data; // Holds the current data for the frame
   bool isServer;  // Holds if this app is a server
+  u_long nonblocking; // holds non blocking flag
 
   // Holds the initial data for the server to send to the client, this is only
   // done once to save sending scores and captures over.
@@ -110,7 +111,7 @@ public:
 
   // Secondary thread loops forever until told to quit, waits for new clients,
   // if a new client is found, store the new client and send initial data
-  void* ConnectToClients();
+  void ConnectToClients();
 
   // Initialises the client and attempts to connect to server asking to
   // retrieve the initial data the server would send
