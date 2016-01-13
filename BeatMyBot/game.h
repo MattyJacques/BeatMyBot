@@ -12,8 +12,7 @@ private:
 	enum GameState{RUNNING, PAUSED, MINIMISED};
 	GameState m_State;
 	GameTimer m_timer;
-  bool server;
-  char* IP;
+
 public:
 	static Game* GetInstance();		// Thread-safe singleton
 	static void Release();

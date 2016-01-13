@@ -142,7 +142,7 @@ void Networking::ConnectToServer()
   serverAddress.sin_addr.s_addr = inet_addr(IP);        // Server IP
   serverAddress.sin_port = htons(PORT);                 // Local port
 
-  ioctlsocket(sock, FIONBIO, &nonblocking);
+  //ioctlsocket(sock, FIONBIO, &nonblocking);
 
   // Create the connect message and send to the server, checking for error
   char connectStr[3] = "hi";

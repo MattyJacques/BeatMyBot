@@ -70,7 +70,7 @@ ErrorType DynamicObjects::Update(float frametime)
   {
     Networking* pNetwork = Networking::GetInstance();
 
-    if (!Networking::GetInstance()->Recieve())
+    if (Networking::GetInstance()->Recieve())
     {
       for (int i = 0; i < NUMTEAMS; i++)
       {

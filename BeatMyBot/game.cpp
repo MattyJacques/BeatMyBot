@@ -108,7 +108,7 @@ ErrorType Game::RunInterface()
 	}
 
   // Display Bot States
-  if (server)
+  if (Networking::GetInstance()->isServer)
   {
     for (int i = 0; i < NUMBOTSPERTEAM; i++)
     {
@@ -166,20 +166,21 @@ ErrorType Game::Update()
 	if(m_State == RUNNING)
 	// Update Dynamic objects
 	{
-    if (server)
+    DynamicObjects::GetInstance()->Update(m_timer.m_fFrameTime);
+    if (Networking::GetInstance()->isServer)
     {
       MyInputs* pInput = MyInputs::GetInstance();
       pInput->SampleKeyboard();
       if (pInput->KeyPressed(DIK_C))
       {
-        server = false;
         Networking::Release();
+        Networking::GetInstance()->isServer = false;
         //Networking::GetInstance()->WSASetup();
         Networking::GetInstance()->ConnectToServer();
       }
       else
       {
-        DynamicObjects::GetInstance()->Update(m_timer.m_fFrameTime);
+        //DynamicObjects::GetInstance()->Update(m_timer.m_fFrameTime);
         Networking::GetInstance()->ConnectToClients();
         Networking::GetInstance()->Send();
       }
@@ -317,7 +318,6 @@ ErrorType Game::InitialiseScript()
   Pathfinder::GetInstance()->GenerateNodes();
 
 
-  server = true;
   if (!Networking::GetInstance()->ServerSetup())
     ErrorLogger::Writeln(L"Error: ServerSetup() Failure");
   else
