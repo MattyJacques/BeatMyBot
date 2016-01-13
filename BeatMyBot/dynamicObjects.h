@@ -88,5 +88,5 @@ public:
   void SetScoreTimer(double time);
 
   // Converts degrees to radians
-  float DegsToRads(int degrees);
+  double DegsToRads(int degrees);
 };

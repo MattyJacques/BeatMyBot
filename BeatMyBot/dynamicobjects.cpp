@@ -78,17 +78,17 @@ ErrorType DynamicObjects::Update(float frametime)
         {
           m_rgTeams[i].m_rgBots[j].SetPosition(pNetwork->data.teams[i].bots[j].
             xValue, pNetwork->data.teams[i].bots[j].yValue);
-          m_rgTeams[i].m_rgBots[j].SetDir(DegsToRads((int)pNetwork->data.teams[i].
-            bots[j].dir));
+          //m_rgTeams[i].m_rgBots[j].SetDir(DegsToRads((int)pNetwork->data.teams[i].
+          //  bots[j].dir));
           m_rgTeams[i].m_rgBots[j].SetIsAlive(pNetwork->data.teams[i].bots[j].isAlive);
         }
       }
 
-      for (unsigned j = 0; j < NUMTEAMS; j++)
+      for (int i = 0; i < NUMTEAMS; i++)
       {
-        for (unsigned i = 0; i < NUMBOTSPERTEAM; i++)
+        for (int j = 0; j < NUMBOTSPERTEAM; j++)
         {
-          m_rgTeams[i].m_rgBots[i].SetShotData(pNetwork->data.teams[i].shots[j].team,
+          m_rgTeams[i].m_rgBots[j].SetShotData(pNetwork->data.teams[i].shots[j].team,
             pNetwork->data.teams[i].shots[j].bot,
             pNetwork->data.teams[i].shots[j].damage,
             pNetwork->data.teams[i].shots[j].firing);
@@ -271,7 +271,7 @@ void DynamicObjects::SetScoreTimer(double time)
 } // SetScoreTimer()
 
 
-float DynamicObjects::DegsToRads(int degrees)
+double DynamicObjects::DegsToRads(int degrees)
 { // Converts degrees to radians
 
   return degrees * (PI / 180.0);

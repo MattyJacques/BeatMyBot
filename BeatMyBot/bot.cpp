@@ -424,8 +424,8 @@ bool Bot::GetFiring()
 void Bot::SetPosition(double x, double y)
 { // Sets the position of the bot to given parameters
 
-  m_Position.XValue = x;
-  m_Position.YValue = y;
+  m_Position.XValue = (float)x;
+  m_Position.YValue = (float)y;
 
 } // SetPosition()
 
@@ -433,7 +433,7 @@ void Bot::SetPosition(double x, double y)
 void Bot::SetDir(double dir)
 { // Sets the bots direction using radians
 
-  m_dDirection = dir;
+  m_dDirection = (float)dir;
 
 } // SetDir()
 

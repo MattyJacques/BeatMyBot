@@ -173,8 +173,8 @@ std::vector<Vector2D> Pathfinder::GeneratePath(Vector2D start, Vector2D goal)
     currentNode = &nodeList[index];   // Define current node as lowest fscore
 
     if (currentNode->nodeID == endID)
-    { // Return path if we have found the end
-      return GetPath(currentNode);
+    { 
+      break;
     }
     else
     { // If not the end, change node to closed then look at edges to next nodes
@@ -213,6 +213,7 @@ std::vector<Vector2D> Pathfinder::GeneratePath(Vector2D start, Vector2D goal)
     }
   } // while (openNum)
 
+  return GetPath(currentNode);
 } // GeneratePath()
 
 
@@ -275,11 +276,11 @@ void Pathfinder::Release()
 
 void Pathfinder::PathDebug(std::vector<Vector2D> drawPath)
 { // DELETE BEFORE HAND IN
-  int i = 0;
+  unsigned int i = 0;
 
   if (drawPath.size() > 0)
   {
-    while (i < drawPath.size() - 1)
+    while (i < (drawPath.size() - 1))
     {
 
       Renderer::GetInstance()->DrawLine(drawPath[i], drawPath[i + 1]);

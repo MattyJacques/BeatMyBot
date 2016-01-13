@@ -94,7 +94,7 @@ void Networking::ConnectToClients()
       (struct sockaddr*) &clientAddress, &clientLength);
 
     // Create the char array to check if the client is actually valid
-    char check[3] = "hi";
+    char check[] = "hi";
 
     if (strcmp(buffer, check) == 0)
     { // Client send correct message, add to the client list
@@ -145,7 +145,7 @@ void Networking::ConnectToServer()
   //ioctlsocket(sock, FIONBIO, &nonblocking);
 
   // Create the connect message and send to the server, checking for error
-  char connectStr[3] = "hi";
+  char connectStr[] = "hi";
   if (sendto(sock, connectStr, strlen(connectStr), 0, (struct sockaddr*) &serverAddress, sizeof(serverAddress)) != strlen(connectStr))
   {
     ErrorLogger::Writeln(L"Error: sendto() - ConnectToServer() - Exiting");
@@ -179,6 +179,7 @@ void Networking::ConnectToServer()
   for (int i = 0; i < NUMDOMINATIONPOINTS; i++)
     DynamicObjects::GetInstance()->m_rgDominationPoints[i].m_OwnerTeamNumber = initData.dpStates[i];
 
+  ioctlsocket(sock, FIONBIO, &nonblocking);
 } // ConnectToServer()
 
 
@@ -234,7 +235,7 @@ void Networking::Send()
   }
 
   // Send data to all clients
-  for (int i = 0; i < clients.size(); i++)
+  for (unsigned int i = 0; i < clients.size(); i++)
   {
     if (sendto(sock, (char*)&data, sizeof(NetData), 0, (struct sockaddr*) &clients[i], sizeof(clients[i])))
       ErrorLogger::Writeln(L"Error: sendto() - Send() - Wrong size - Exiting");
@@ -252,10 +253,10 @@ bool Networking::Recieve()
   memset(&buffer, 0, sizeof(NetData));
 
   int addrLen = sizeof(serverAddress);
-
+  int recvLen = 0;
   recvfrom(sock, buffer, sizeof(NetData), 0, (struct sockaddr*) &serverAddress, &addrLen);
 
-  char exitCode[5] = "exit";
+  char exitCode[] = "exit";
   if (strcmp(buffer, exitCode) == 0)
   {
     ErrorLogger::Writeln(L"Exit code recieved - Exiting");
@@ -288,7 +289,7 @@ void Networking::SendClientExit()
 
   char exitCode[5] = "exit";
 
-  for (int i = 0; i < clients.size(); i++)
+  for (unsigned int i = 0; i < clients.size(); i++)
   {
     if (sendto(sock, exitCode, sizeof(exitCode), 0, (struct sockaddr*) &clients[i], sizeof(clients[i])))
       ErrorLogger::Writeln(L"Error: sendto() - SendClientExit() - Wrong size - Exiting");
@@ -300,7 +301,7 @@ void Networking::SendClientExit()
 int16_t Networking::RadsToDegrees(double radians)
 { // Converts radians to degrees
 
-  return (int16_t)radians * (180 / PI);
+  return (int16_t)(radians * (180 / PI));
 
 } // RadsToDegrees()
 

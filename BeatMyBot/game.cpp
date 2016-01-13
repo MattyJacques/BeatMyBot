@@ -175,7 +175,6 @@ ErrorType Game::Update()
       {
         Networking::Release();
         Networking::GetInstance()->isServer = false;
-        //Networking::GetInstance()->WSASetup();
         Networking::GetInstance()->ConnectToServer();
       }
       else
