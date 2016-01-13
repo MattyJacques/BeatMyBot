@@ -288,7 +288,7 @@ bool Networking::Recieve()
   ErrorLogger::Write(sizeof(NetData));
   ErrorLogger::Writeln(L": Size of NetData");*/
 
-  dataSent += sizeof(NetData);
+  dataSent += sizeof(DynamicObjects);
 
   static double count = 0;
   debugTimer.mark();
