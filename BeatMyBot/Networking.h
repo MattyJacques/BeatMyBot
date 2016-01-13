@@ -43,8 +43,8 @@ private:
     int16_t xPos;   // X value of the bots position, shortened to 16 bit int
     int16_t yPos;   // Y value of the bots position, shortened to 16 bit int
     int16_t dir;     // Degrees used so int can be used with more effectiveness
-    int16_t xVel;
-    int16_t yVel;
+    float xVel;
+    float yVel;
     bool isAlive;     // If the bot is alive or not
   };
 

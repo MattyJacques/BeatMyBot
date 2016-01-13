@@ -213,9 +213,9 @@ void Networking::Send()
                                         GetBot(i, j).GetLocation().YValue;
       data.teams[i].bots[j].dir = RadsToDegrees(DynamicObjects::GetInstance()->
                                         GetBot(i, j).GetDirection());
-      data.teams[i].bots[j].xVel = (int16_t)DynamicObjects::GetInstance()->
+      data.teams[i].bots[j].xVel = DynamicObjects::GetInstance()->
                                         GetBot(i, j).GetVelocity().XValue;
-      data.teams[i].bots[j].xVel = (int16_t)DynamicObjects::GetInstance()->
+      data.teams[i].bots[j].xVel = DynamicObjects::GetInstance()->
                                         GetBot(i, j).GetVelocity().YValue;
       data.teams[i].bots[j].isAlive = DynamicObjects::GetInstance()->
                                         GetBot(i, j).IsAlive();
@@ -305,7 +305,7 @@ void Networking::SendClientExit()
 int16_t Networking::RadsToDegrees(double radians)
 { // Converts radians to degrees
 
-  return (int16_t)(radians * (180 / PI));
+  return (int16_t)(radians * 180 / PI);
 
 } // RadsToDegrees()
 

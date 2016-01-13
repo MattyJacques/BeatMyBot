@@ -78,8 +78,8 @@ ErrorType DynamicObjects::Update(float frametime)
         {
           m_rgTeams[i].m_rgBots[j].SetPosition(pNetwork->data.teams[i].bots[j].
             xPos, pNetwork->data.teams[i].bots[j].yPos);
-          m_rgTeams[i].m_rgBots[j].SetDir(DegsToRads((int)pNetwork->data.teams[i].
-            bots[j].dir));
+          //m_rgTeams[i].m_rgBots[j].SetDir(DegsToRads((int)pNetwork->data.teams[i].
+            //bots[j].dir));
           m_rgTeams[i].m_rgBots[j].SetVelocity(pNetwork->data.teams[i].bots[j].
             xVel, pNetwork->data.teams[i].bots[j].yVel);
           m_rgTeams[i].m_rgBots[j].SetIsAlive(pNetwork->data.teams[i].bots[j].isAlive);
@@ -276,6 +276,6 @@ void DynamicObjects::SetScoreTimer(double time)
 double DynamicObjects::DegsToRads(int degrees)
 { // Converts degrees to radians
 
-  return degrees * (PI / 180.0);
+  return degrees * PI / 180.0;
 
 } // DegsToRads()
