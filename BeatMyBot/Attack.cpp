@@ -62,8 +62,16 @@ void Attack::Execute(Bot* pBot)
     else if (pBot->GetTargetTeam() != 1)        // If not aiming
       pBot->SetTarget(1, pBot->botTarget);
 
-    if (pBot->GetAccuracy() >= 0.7)
-      pBot->Shoot();
+    if ((pBot->GetLocation() - DynamicObjects::GetInstance()->GetBot(1, pBot->botTarget).GetLocation()).magnitude() < 500)
+    {
+      if (pBot->GetAccuracy() >= 0.7)
+        pBot->Shoot();
+    }
+    else
+    {
+      if (pBot->GetAccuracy() >= 0.6)
+        pBot->Shoot();
+    }
   }
   else
   {
@@ -86,6 +94,8 @@ void Attack::GetTarget(Bot* pBot)
 { // Searches for an enemy bot within range and in line of sight, sets the bots
   // target to the ID of the bot found and starts aiming
 
+  int closeDist = 999999999;
+
   for (int i = 0; i < NUMBOTSPERTEAM; i++)
   {
     // If the bot has a line of the sight to another bot, plus if the distance
@@ -95,8 +105,11 @@ void Attack::GetTarget(Bot* pBot)
       DynamicObjects::GetInstance()->GetBot(1, i).GetLocation()) &&
       (pBot->GetLocation() - DynamicObjects::GetInstance()->GetBot(1, i).
       GetLocation()).magnitude() <= 600 && DynamicObjects::GetInstance()->
-      GetBot(1, i).IsAlive())
+      GetBot(1, i).IsAlive() && (pBot->GetLocation() - DynamicObjects::GetInstance()->GetBot(1, i).
+      GetLocation()).magnitude() < closeDist)
     {
+      closeDist = DynamicObjects::GetInstance()->GetBot(1, i).
+                    GetLocation().magnitude();
       pBot->botTarget = i;
       pBot->SetTarget(1, i);
     }

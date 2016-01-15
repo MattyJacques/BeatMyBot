@@ -348,9 +348,9 @@ void Bot::ProcessAI()
   else
     pCurrentState = nullptr;
 
-  Pathfinder::GetInstance()->PathDebug(myPath);
+  //Pathfinder::GetInstance()->PathDebug(myPath);
 
-  BotDebug();
+  //BotDebug();
 
 }
 
