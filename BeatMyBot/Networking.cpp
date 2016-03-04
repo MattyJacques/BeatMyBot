@@ -1,6 +1,8 @@
 // Title        : Networking.cpp
 // Purpose      : Gives network functionality to game
 
+// Deprecated inet_addr(IP) use
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #include <winsock2.h>       // Windows networking
 #include "Networking.h"
@@ -8,15 +10,12 @@
 #include "dynamicObjects.h" // Bot Data
 #include "game.h"           // GameTimer
 #include <string>           // use of strings for debugging
-#include "zlib.h"           // Include zlib
-
-#pragma comment(lib,"zdll.lib") // Include zlib for compression
+#include <WS2tcpip.h>       // inet_pton()
 
 // Initialise instance of the class to null
 Networking* Networking::pInstance = nullptr;
 
 bool Networking::isActive = false;
-
 
 Networking::Networking()
 { // Initialises data to make sure it is not filled with junk
@@ -195,14 +194,6 @@ bool Networking::ConnectToServer()
 } // ConnectToServer()
 
 
-void Networking::CreateThread()
-{ // Makes a new thread to check for clients
-
-  //_beginthreadex(NULL, 0, (unsigned int(__stdcall *)(void*))ConnectToClients(), 0, 0, (unsigned int*)&thread);
-
-} // CreateThread()
-
-
 void Networking::StoreClient(sockaddr_in address)
 {  // Stores the client in the vector of clients
 
@@ -281,13 +272,6 @@ bool Networking::Recieve()
 
   memcpy(&data, &buffer, sizeof(NetData));
 
-  
-  /*ErrorLogger::Write(sizeof(DynamicObjects));
-  ErrorLogger::Writeln(L": Size of dynamic objects");
-  ErrorLogger::Write(sizeof(NetData));
-  ErrorLogger::Writeln(L": Size of NetData");*/
-
-
   return true;
 
 } // Recieve()
@@ -343,50 +327,6 @@ bool Networking::WSASetup()
   return result;
 
 } // WSASetup()
-
-
-void Networking::Compress()
-{ // Compress the data using zlib
-
-  // Create deflate stream
-  z_stream defstream;
-
-  defstream.zalloc = Z_NULL;
-  defstream.zfree = Z_NULL;
-  defstream.opaque = Z_NULL;
-  defstream.avail_in = (uInt)sizeof(NetData) + 1; // size of input, string + terminator
-  defstream.next_in = (Bytef *)&data;             // input char array
-  defstream.avail_out = (uInt)sizeof(NetData);    // size of output
-  defstream.next_out = (Bytef *)comData;          // output char array
-
-  deflateInit(&defstream, Z_DEFAULT_COMPRESSION);
-  deflate(&defstream, Z_FINISH);
-  deflateEnd(&defstream);
-
-  printf("Deflated size is: %lu\n", (char*)defstream.next_out - comData);
-
-} // Compress()
-
-
-void Networking::Decompress(char* buffer)
-{ // Decompress data using zlib
-
-  z_stream infstream;
-  infstream.zalloc = Z_NULL;
-  infstream.zfree = Z_NULL;
-  infstream.opaque = Z_NULL;
-  infstream.avail_in = (uInt)sizeof(NetData); // size of input
-  infstream.next_in = (Bytef *)buffer; // input char array
-  infstream.avail_out = (uInt)sizeof(NetData); // size of output
-  infstream.next_out = (Bytef *)comData; // output char array
-
-  inflateInit(&infstream);
-  inflate(&infstream, Z_NO_FLUSH);
-  inflateEnd(&infstream);
-
-  printf("Inflate:\n%lu\n%s\n", strlen((char*)&data), &data);
-
-} // Decompress()
 
 
 void Networking::CloseConnections()

@@ -82,12 +82,6 @@ private:
   // Starts windows sockets
   bool WSASetup();
 
-  // Compress the data using zlib
-  void Compress();
-
-  // Decompress data using zlib
-  void Decompress(char* buffer);
-
   // Initialises data to make sure it is not filled with junk
   Networking();
 
@@ -127,9 +121,6 @@ public:
   // Initialises the client and attempts to connect to server asking to
   // retrieve the initial data the server would send
   bool ConnectToServer();
-
-  // Makes a new thread to check for clients
-  void CreateThread();
 
   // Stores the client in the vector of clients
   void StoreClient(sockaddr_in address);

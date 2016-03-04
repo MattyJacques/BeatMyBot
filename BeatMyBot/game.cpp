@@ -318,8 +318,6 @@ ErrorType Game::InitialiseScript()
 
   if (!Networking::GetInstance()->ServerSetup())
     ErrorLogger::Writeln(L"Error: ServerSetup() Failure");
-  else
-    Networking::GetInstance()->CreateThread();
 
 	return SUCCESS;
 }
