@@ -108,44 +108,44 @@ ErrorType Game::RunInterface()
 	}
 
   // Display Bot States
-  //if (Networking::GetInstance()->isServer)
-  //{
-  //  for (int i = 0; i < NUMBOTSPERTEAM; i++)
-  //  {
-  //    wchar_t stateName[11];
-  //    if (DynamicObjects::GetInstance()->GetBot(0, i).pCurrentState)
-  //    {
-  //      mbstowcs(stateName, DynamicObjects::GetInstance()->GetBot(0, i).pCurrentState->GetStateName(), 11);
-  //    }
-  //    else
-  //    {
-  //      char name[11];
-  //      sprintf(name, "nullptr");
-  //      mbstowcs(stateName, name, 11);
-  //    }
+  if (Networking::GetInstance()->isServer)
+  {
+    for (int i = 0; i < NUMBOTSPERTEAM; i++)
+    {
+      wchar_t stateName[11];
+      if (DynamicObjects::GetInstance()->GetBot(0, i).pCurrentState)
+      {
+        mbstowcs(stateName, DynamicObjects::GetInstance()->GetBot(0, i).pCurrentState->GetStateName(), 11);
+      }
+      else
+      {
+        char name[11];
+        sprintf(name, "nullptr");
+        mbstowcs(stateName, name, 11);
+      }
 
-  //    Vector2D pos(10.0f, i*50.0f + 100.0f);
-  //    pTheRenderer->DrawTextAt(pos, L"Bot ");
-  //    pos.set(42.5f, i*50.0f + 100.0f);
-  //    pTheRenderer->DrawNumberAt(pos, i);
-  //    pos.set(60.5f, i * 50.0f + 100.0f);
+      Vector2D pos(10.0f, i*50.0f + 100.0f);
+      pTheRenderer->DrawTextAt(pos, L"Bot ");
+      pos.set(42.5f, i*50.0f + 100.0f);
+      pTheRenderer->DrawNumberAt(pos, i);
+      pos.set(60.5f, i * 50.0f + 100.0f);
 
-  //    if (DynamicObjects::GetInstance()->GetBot(0, i).IsAlive())
-  //      pTheRenderer->DrawTextAt(pos, L"Alive");
-  //    else
-  //      pTheRenderer->DrawTextAt(pos, L"Dead");
+      if (DynamicObjects::GetInstance()->GetBot(0, i).IsAlive())
+        pTheRenderer->DrawTextAt(pos, L"Alive");
+      else
+        pTheRenderer->DrawTextAt(pos, L"Dead");
 
-  //    pos.set(110.0f, i*50.0f + 100.0f);
-  //    pTheRenderer->DrawTextAt(pos, stateName);
-  //    pos.set(200.0f, i*50.0f + 100.0f);
-  //    pTheRenderer->DrawNumberAt(pos, DynamicObjects::GetInstance()->GetBot(0, i).domTarget);
-  //    pos.set(240.0f, i*50.0f + 100.0f);
-  //    pTheRenderer->DrawNumberAt(pos, DynamicObjects::GetInstance()->GetBot(0, i).botTarget);
-  //    pos.set(280.0f, i*50.0f + 100.0f);
-  //    pTheRenderer->DrawNumberAt(pos, DynamicObjects::GetInstance()->GetBot(0, i).GetAmmo());
+      pos.set(110.0f, i*50.0f + 100.0f);
+      pTheRenderer->DrawTextAt(pos, stateName);
+      pos.set(200.0f, i*50.0f + 100.0f);
+      pTheRenderer->DrawNumberAt(pos, DynamicObjects::GetInstance()->GetBot(0, i).domTarget);
+      pos.set(240.0f, i*50.0f + 100.0f);
+      pTheRenderer->DrawNumberAt(pos, DynamicObjects::GetInstance()->GetBot(0, i).botTarget);
+      pos.set(280.0f, i*50.0f + 100.0f);
+      pTheRenderer->DrawNumberAt(pos, DynamicObjects::GetInstance()->GetBot(0, i).GetAmmo());
 
-  //  }
-  //}
+    }
+  }
 
 
 	return answer;
